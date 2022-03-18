@@ -4,6 +4,16 @@
 
 > **签名：I try to make things that don't suck and enjoy the fun of the process。**
 
+## #2021年
+* 12-31 **»** [知识的碎片(2021)](https://m1sery.github.io/2021/12/31/The-Daily-Notes-Of-2021/)
+* 08-02 **»** [放弃 newsfeed 拥抱 newsletter](https://m1sery.github.io/2021/12/31/The-Daily-Notes-Of-2021/)
+* 02-18 **»** [混迹于 Clubhouse 两周后的一些想法🤔](https://m1sery.github.io/2021/02/18/Discussion-On-The-Popularity-Of-Clubhouse/)
+## #2020年
+* 12-31 **»** [知识的碎片（2020）](https://m1sery.github.io/2020/12/31/The-Daily-Notes-Of-2020/)
+* 08-02 **»** [初探 Web Components](https://m1sery.github.io/2020/08/02/Web-Components/)
+* 03-11 **»** [TL;DR](https://m1sery.github.io/2020/03/11/Too-Long-Dont-Read/)
+* 01-21 **»** [Linux 命令行之 Crontab](https://m1sery.github.io/2020/01/21/Learning-Linux-Series-Command-Line-Crontab/)
+
 ## #2019年
 * 07-31 **»** [React Native 新手常见问题及体验总结](https://m1sery.github.io/2019/07/31/The-common-issues-and-errors-I-have-faced-as-a-react-native-beginner/)  
 * 04-27 **»** [ES10(ECMAScript2019)特征预览](https://m1sery.github.io/2019/04/27/A-Preview-Of-ECMAScript2019-ES10/)
