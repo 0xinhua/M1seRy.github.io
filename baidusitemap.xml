@@ -5,7 +5,7 @@
     
   <url>
     <loc>https://wuxinhua.com/2021/12/31/The-Daily-Notes-Of-2021/</loc>
-    <lastmod>2022-03-18T11:45:20.171Z</lastmod>
+    <lastmod>2022-03-18T11:48:37.128Z</lastmod>
     <data>
         <display>
         <title>知识的碎片(2021)</title>
@@ -354,21 +354,6 @@
 
     
   <url>
-    <loc>https://wuxinhua.com/2017/07/30/React-redux-connect-Explain-in-detail/</loc>
-    <lastmod>2020-12-31T12:01:49.408Z</lastmod>
-    <data>
-        <display>
-        <title>对React-redux中connect方法的理解</title>
-        <pubTime>2017-07-30T06:11:48.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
     <loc>https://wuxinhua.com/2017/11/20/React-ssr-exploration/</loc>
     <lastmod>2020-12-31T12:01:49.408Z</lastmod>
     <data>
@@ -378,6 +363,21 @@
         
         <tag>React</tag>
          
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://wuxinhua.com/2017/07/30/React-redux-connect-Explain-in-detail/</loc>
+    <lastmod>2020-12-31T12:01:49.408Z</lastmod>
+    <data>
+        <display>
+        <title>对React-redux中connect方法的理解</title>
+        <pubTime>2017-07-30T06:11:48.000Z</pubTime>
+        
          
            
         </display>
@@ -403,6 +403,21 @@
 
     
   <url>
+    <loc>https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(%E7%BF%BB%E8%AF%91)/</loc>
+    <lastmod>2020-12-31T12:01:49.407Z</lastmod>
+    <data>
+        <display>
+        <title>Good Code vs Bad Code in Golang</title>
+        <pubTime>2018-04-30T06:04:21.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://wuxinhua.com/2019/11/30/Migrating-from-travis-to-GitHub-Actions/</loc>
     <lastmod>2020-12-31T12:01:49.407Z</lastmod>
     <data>
@@ -412,21 +427,6 @@
         
         <tag>GitHub Actions</tag>
          
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(%E7%BF%BB%E8%AF%91)/</loc>
-    <lastmod>2020-12-31T12:01:49.407Z</lastmod>
-    <data>
-        <display>
-        <title>Good Code vs Bad Code in Golang</title>
-        <pubTime>2018-04-30T06:04:21.000Z</pubTime>
-        
          
            
         </display>
