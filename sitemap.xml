@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://wuxinhua.com/2022/04/14/newsletter-321laixin/</loc>
+    
+    <lastmod>2022-04-14T13:40:47.416Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wuxinhua.com/2022/03/23/Node-js-Package-Manager-And-Npm-Dependency-Installation-Mechanism/</loc>
+    
+    <lastmod>2022-04-14T13:14:29.015Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wuxinhua.com/2021/12/31/The-Daily-Notes-Of-2021/</loc>
     
     <lastmod>2022-03-18T11:48:37.128Z</lastmod>
@@ -58,14 +72,14 @@
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2017/10/13/What-happen-from-input-the-URL-in-the-browser-to-the-page-bring-out/</loc>
+    <loc>https://wuxinhua.com/2017/10/24/What-happen-from-input-the-URL-in-the-browser-to-the-page-bring-out-part2/</loc>
     
     <lastmod>2020-12-31T12:01:49.414Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2017/10/24/What-happen-from-input-the-URL-in-the-browser-to-the-page-bring-out-part2/</loc>
+    <loc>https://wuxinhua.com/2017/10/13/What-happen-from-input-the-URL-in-the-browser-to-the-page-bring-out/</loc>
     
     <lastmod>2020-12-31T12:01:49.414Z</lastmod>
     
@@ -79,14 +93,14 @@
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2017/12/13/The-think-of-sort-algorithms/</loc>
+    <loc>https://wuxinhua.com/2020/08/02/Web-Components/</loc>
     
     <lastmod>2020-12-31T12:01:49.413Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2020/08/02/Web-Components/</loc>
+    <loc>https://wuxinhua.com/2017/12/13/The-think-of-sort-algorithms/</loc>
     
     <lastmod>2020-12-31T12:01:49.413Z</lastmod>
     
@@ -100,14 +114,14 @@
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2017/12/22/The-reading-book-list-in-2017/</loc>
+    <loc>https://wuxinhua.com/2018/01/20/The-svg-animation-in-action/</loc>
     
     <lastmod>2020-12-31T12:01:49.412Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2018/01/20/The-svg-animation-in-action/</loc>
+    <loc>https://wuxinhua.com/2017/12/22/The-reading-book-list-in-2017/</loc>
     
     <lastmod>2020-12-31T12:01:49.412Z</lastmod>
     
@@ -135,14 +149,14 @@
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2019/02/25/The-Guide-To-Flexbox/</loc>
+    <loc>https://wuxinhua.com/2019/07/31/The-common-issues-and-errors-I-have-faced-as-a-react-native-beginner/</loc>
     
     <lastmod>2020-12-31T12:01:49.410Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2019/07/31/The-common-issues-and-errors-I-have-faced-as-a-react-native-beginner/</loc>
+    <loc>https://wuxinhua.com/2019/02/25/The-Guide-To-Flexbox/</loc>
     
     <lastmod>2020-12-31T12:01:49.410Z</lastmod>
     
@@ -170,13 +184,6 @@
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2017/11/20/React-ssr-exploration/</loc>
-    
-    <lastmod>2020-12-31T12:01:49.408Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wuxinhua.com/2017/07/30/React-redux-connect-Explain-in-detail/</loc>
     
     <lastmod>2020-12-31T12:01:49.408Z</lastmod>
@@ -184,14 +191,21 @@
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2020/01/21/Learning-Linux-Series-Command-Line-Crontab/</loc>
+    <loc>https://wuxinhua.com/2017/11/20/React-ssr-exploration/</loc>
+    
+    <lastmod>2020-12-31T12:01:49.408Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(%E7%BF%BB%E8%AF%91)/</loc>
     
     <lastmod>2020-12-31T12:01:49.407Z</lastmod>
     
   </url>
   
   <url>
-    <loc>https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(%E7%BF%BB%E8%AF%91)/</loc>
+    <loc>https://wuxinhua.com/2020/01/21/Learning-Linux-Series-Command-Line-Crontab/</loc>
     
     <lastmod>2020-12-31T12:01:49.407Z</lastmod>
     
