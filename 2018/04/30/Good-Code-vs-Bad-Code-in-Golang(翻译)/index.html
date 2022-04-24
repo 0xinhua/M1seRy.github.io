@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="3W1ar6zfFsnaL1sEvDzeytVUVg5oGeuj2l0iM0svaJw">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="FE, 前端, Javascript, Nodejs, blog, 前端博客, React, Vue ">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kevin's Notes" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="最近在学习Go，也顺便在GCTT社区帮忙翻译了一些文章。 原文地址：Good Code vs Bad Code in Golang作者：Teivah Harsanyi 最近我被问到关于Golang好代码和不好的代码的一些细节问题，我发现这个问题非常有趣，有趣到可以就这个问题写一篇文章。为了阐明我的观点，我举了一些我在Air Traffic Management（ATM）航空交通管制领域的代码例子，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Good Code vs Bad Code in Golang">
+<meta property="og:url" content="https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(翻译)/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Notes">
+<meta property="og:description" content="最近在学习Go，也顺便在GCTT社区帮忙翻译了一些文章。 原文地址：Good Code vs Bad Code in Golang作者：Teivah Harsanyi 最近我被问到关于Golang好代码和不好的代码的一些细节问题，我发现这个问题非常有趣，有趣到可以就这个问题写一篇文章。为了阐明我的观点，我举了一些我在Air Traffic Management（ATM）航空交通管制领域的代码例子，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-12-31T12:01:49.407Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Good Code vs Bad Code in Golang">
+<meta name="twitter:description" content="最近在学习Go，也顺便在GCTT社区帮忙翻译了一些文章。 原文地址：Good Code vs Bad Code in Golang作者：Teivah Harsanyi 最近我被问到关于Golang好代码和不好的代码的一些细节问题，我发现这个问题非常有趣，有趣到可以就这个问题写一篇文章。为了阐明我的观点，我举了一些我在Air Traffic Management（ATM）航空交通管制领域的代码例子，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(翻译)/">
+
+
+
+
+
+  <title>Good Code vs Bad Code in Golang | Kevin's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146717212-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-146717212-1');
+</script>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button role="presentation">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archive
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(翻译)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wuxinhua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Good Code vs Bad Code in Golang</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-30T14:04:21+08:00">
+                2018-04-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在学习<code>Go</code>，也顺便在<a href="https://studygolang.com/gctt" target="_blank" rel="noopener">GCTT</a>社区帮忙翻译了一些文章。</p>
+<p>原文地址：<a href="https://teivah.io/blog/good-code-vs-bad-code-in-golang/" target="_blank" rel="noopener">Good Code vs Bad Code in Golang</a><br>作者：<a href="https://teivah.io/" target="_blank" rel="noopener">Teivah Harsanyi</a></p>
+<p>最近我被问到关于<code>Golang</code>好代码和不好的代码的一些细节问题，我发现这个问题非常有趣，有趣到可以就这个问题写一篇文章。为了阐明我的观点，我举了一些我在<code>Air Traffic Management</code>（<code>ATM</code>）航空交通管制领域的代码例子，这些代码托管在<a href="https://github.com/teivah/golang-good-code-bad-code" target="_blank" rel="noopener">Github</a>上。</p>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>首先，简短地描述一下项目的背景。</p>
+<p><code>Eurocontrol</code>(欧洲航管组织)是一个管理欧洲各国航空交通的组织。<code>Eurocontrol</code>和<code>Air Navigation Service Provider</code>(<code>ANSP</code>)之间共同的数据交换网络称为<code>AFTN</code>。这个网络主要用来交换两种格式的信息： <code>ADEXP</code> 和 <code>ICAO</code>(国际民航组织)格式信息。每一种信息都有它们自己的语法格式，但在语义上，或多或少它们是相同的。在这个背景下，性能必须是实现的关键因素。</p>
+<p>这个项目需要提供基于<code>GO</code>语言的用于转换<code>ADEXP</code>格式信息的两种实现(<code>ICAO</code>格式的转换并没有体现在这次对比中)：</p>
+<ul>
+<li><p>不好的实现方式（<code>package</code>包名：<a href="https://github.com/teivah/golang-good-code-bad-code/tree/master/bad" target="_blank" rel="noopener">bad</a>）  </p>
+</li>
+<li><p>重构之后的实现方式（<code>package</code>包名：<a href="https://github.com/teivah/golang-good-code-bad-code/tree/master/good" target="_blank" rel="noopener">good</a>）  </p>
+</li>
+<li><p><code>ADEXP</code>格式的信息例子可以在<a href="https://raw.githubusercontent.com/teivah/golang-good-code-bad-code/master/resources/tests/adexp.txt" target="_blank" rel="noopener">这里</a>找到。</p>
+</li>
+</ul>
+<p>这次对比的结构里，在<code>ADEXP</code>信息中，解析处理部分只是一个子集，至今它仍然跟<code>Go</code>中常见的一些错误有关系。</p>
+<h2 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h2><p>概括地讲，一个<code>ADEXP</code>信息是一个<code>tokens</code>的集合，可以是下面任意一种：</p>
+<ul>
+<li><p>简单的</p>
+<blockquote>
+<p>-ARCID ACA878</p>
+</blockquote>
+</li>
+</ul>
+<p>代表<code>ARCID</code>(航班<code>ID</code>) 是<code>ACA878</code>。</p>
+<ul>
+<li><p>循环的</p>
+<blockquote>
+<p>-EETFIR EHAA 0853<br> -EETFIR EBBU 0908</p>
+</blockquote>
+</li>
+</ul>
+<p>这个例子代表的是一个<code>FIR</code>(飞行情报区)列表，第一个航班是<code>EHAA 0853</code>,第二个<code>EBBU 0908</code>。</p>
+<ul>
+<li><p>复杂的</p>
+<blockquote>
+<p>-GEO -GEOID GEO01 -LATTD 490000N -LONGTD 0500000W<br>-GEO -GEOID GEO02 -LATTD 500000N -LONGTD 0400000W</p>
+</blockquote>
+</li>
+</ul>
+<p>一个循环的<code>tockens</code>列表，每一行包含一个子<code>token</code>列表（在这个例子中是<code>GEOID</code>， <code>LATTD</code>， <code>LONGTD</code>）。</p>
+<p>结合项目背景，实现一个并行执行的转化代码变得很重要。所以有以下算法：</p>
+<ul>
+<li><p>实现一个对输入进行清理和重新排列的预处理过程（我们需要清除可能存在的空格，重新排列例如<code>COMMENT</code>等的多行<code>tokens</code>）</p>
+</li>
+<li><p>然后分割每一行至一个协程中。每一个协程将会负责处理一行<code>tokens</code>，并且返回结果。</p>
+</li>
+<li><p>最后一个步骤同样重要，整合结果并且返回一个<code>Message</code>消息)结构体，这是一个公共的结构，不管是<code>ADEXP</code>还是<code>ICAO</code>类型的信息。</p>
+</li>
+</ul>
+<p>每一个包包含一个<code>adexp.go</code>文件暴露主要的<code>ParseAdexpMessage()</code>方法。</p>
+<h2 id="逐步对比"><a href="#逐步对比" class="headerlink" title="逐步对比"></a>逐步对比</h2><p>现在我们逐步来看下我认为的不好的代码，并且我是如何重构它的。</p>
+<h2 id="String类型-vs-byte类型"><a href="#String类型-vs-byte类型" class="headerlink" title="String类型 vs  []byte类型"></a>String类型 vs  []byte类型</h2><p>限制输入类型为字符串类型并不好。<code>Go</code>对<code>byte</code>类型的处理提供了强大的支持（例如基础的<code>trim</code>, <code>regexp</code>等），并且输入将会很大程度上类似于<code>[]byte</code>(鉴于<code>AFTN</code>信息是通过<code>TCP</code>协议来接收的)，实际上没有理由强制要求字符串类型的输入。</p>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>错误的处理实现有点糟糕。</p>
+<p>我们会发现忽视了在第二个参数中返回的一些可能存在的错误：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">preprocessed, _ := preprocess(<span class="keyword">string</span>)</span><br></pre></td></tr></table></figure>
+<p>好的实现方式是捕获每一个可能的错误：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">preprocessed, err := preprocess(bytes)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line"><span class="keyword">return</span> Message&#123;&#125;, err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们可以在下面这种不好的代码中也能找到犯的一些错误：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(in) == <span class="number">0</span> &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="string">""</span>, fmt.Errorf(<span class="string">"Input is empty"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一个错误是语法上的。根据Go的语法，错误提示的字符串既不是大写也不是以标点符号结尾。</p>
+<p>第二个错误是如果一个错误信息是一个简单的字符串常量（不需要格式化），使用轻量的<code>errors.New()</code>性能会更好。</p>
+<p>好的实现如下：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="built_in">len</span>(in) == <span class="number">0</span> &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>, errors.New(<span class="string">"input is empty"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="避免嵌套"><a href="#避免嵌套" class="headerlink" title="避免嵌套"></a>避免嵌套</h2><p> <code>mapLine()</code>函数就是一个很好的例子来说明避免嵌套调用。不好的代码如下：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mapLine</span><span class="params">(msg *Message, in <span class="keyword">string</span>, ch <span class="keyword">chan</span> <span class="keyword">string</span>)</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> !startWith(in, stringComment) &#123;</span><br><span class="line">        token, value := parseLine(in)</span><br><span class="line">        <span class="keyword">if</span> token != <span class="string">""</span> &#123;</span><br><span class="line">            f, contains := factory[<span class="keyword">string</span>(token)]</span><br><span class="line">            <span class="keyword">if</span> !contains &#123;</span><br><span class="line">                ch &lt;- <span class="string">"ok"</span></span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                data := f(token, value)</span><br><span class="line">                enrichMessage(msg, data)</span><br><span class="line">                ch &lt;- <span class="string">"ok"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            ch &lt;- <span class="string">"ok"</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ch &lt;- <span class="string">"ok"</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>相反，好的代码表示得很清晰：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">mapLine</span><span class="params">(in []<span class="keyword">byte</span>, ch <span class="keyword">chan</span> <span class="keyword">interface</span>&#123;&#125;)</span></span> &#123;</span><br><span class="line">    <span class="comment">// Filter empty lines and comment lines</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(in) == <span class="number">0</span> || startWith(in, bytesComment) &#123;</span><br><span class="line">        ch &lt;- <span class="literal">nil</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    token, value := parseLine(in)</span><br><span class="line">    <span class="keyword">if</span> token == <span class="literal">nil</span> &#123;</span><br><span class="line">        ch &lt;- <span class="literal">nil</span></span><br><span class="line">        log.Warnf(<span class="string">"Token name is empty on line %v"</span>, <span class="keyword">string</span>(in))</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sToken := <span class="keyword">string</span>(token)</span><br><span class="line">    <span class="keyword">if</span> f, contains := factory[sToken]; contains &#123;</span><br><span class="line">        ch &lt;- f(sToken, value)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    log.Warnf(<span class="string">"Token %v is not managed by the parser"</span>, <span class="keyword">string</span>(in))</span><br><span class="line">    ch &lt;- <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在我看来，这使得代码易读性更强。此外，这种扁平化的处理方式也应该加到错误捕获代码中，下面的例子：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">a, err := f1()</span><br><span class="line"><span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">    b, err := f2()</span><br><span class="line">    <span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> b, <span class="literal">nil</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">    &#125; </span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>应该被修改成：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">a, err := f1()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">&#125;</span><br><span class="line">b, err := f2()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> b, <span class="literal">nil</span></span><br></pre></td></tr></table></figure>
+<p>同样，第二段代码的可读性更好。</p>
+<h2 id="传值采用value还是reference"><a href="#传值采用value还是reference" class="headerlink" title="传值采用value还是reference"></a>传值采用value还是reference</h2><p>预处理方法的实现并不好：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">preprocess</span><span class="params">(in container)</span> <span class="params">(container, error)</span></span> &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结合项目的背景来说(考虑性能)，考虑到一个信息的结构体有可能会比较大，更好的方式是在<code>container</code>结构内传入指针，否则，在上面例子的代码中<code>container</code>的值将会在每一次调用的时候被覆盖掉。</p>
+<p>好的实现代码将不会有这个问题因为它单个的处理方式(一个简单的24字节的结构，不管什么类型数据)。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">func preprocess(in []byte) ([][]byte, error) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>更广泛地说，无论是根据引用还是数值传递参数都不是一个符合语言习惯的用法。通过数值传递数据也能帮助确定一个方法将不会带来任何的副作用（就像在函数的输入中传递数据一样）。这样做有几个好处，例如单元测试、在代码并发上的重构（否则我们需要检查每个子函数来确定传递是否完成）</p>
+<p>我确信这种这种写法需要根据实际项目背景小心地使用。</p>
+<h2 id="并发"><a href="#并发" class="headerlink" title="并发"></a>并发</h2><p>不好的实现方式源于一个最初的好的想法：利用协程并发处理数据（一个协程处理一行）。</p>
+<p>这导致了在一个协程里反复调用<code>mapLine()</code>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">for i := 0; i &lt; len(lines); i++ &#123;</span><br><span class="line">    go mapLine(&amp;msg, lines[i], ch)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>mapLine()</code>方法三个参数：</p>
+<p>- 返回指向最后一个<code>Message</code>结构的指针。这意味着每个<code>mapLine()</code>将会被同一个变量填充。</p>
+<ul>
+<li><p>当前行</p>
+</li>
+<li><p>一个<code>channel</code>通道用于处理行完成时发送消息</p>
+</li>
+</ul>
+<p>为了共享<code>Message</code>消息而去传递一个指针违背了Go基本原则：</p>
+<blockquote>
+<p>不要通过共享内存来通信，而应该通过通信来共享内存</p>
+</blockquote>
+<p>传递共享的变量有两个主要的缺点：</p>
+<ul>
+<li>缺点 #1：分割一致的修饰</li>
+</ul>
+<p>因为结构中包含一些切片可以被同时修改（同时被两个或者更多的协程）我们得处理互斥的问题。</p>
+<p>例如，<code>Message</code>消息结构包含一个<code>Estdata []estdata</code>，通过加上另一个<code>estdata</code>修改这部分必须像下面这样处理：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">mutexEstdata.Lock()</span><br><span class="line"><span class="keyword">for</span> _, v := <span class="keyword">range</span> value &#123;</span><br><span class="line">    fl := extractFlightLevel(v[subtokenFl])</span><br><span class="line">    msg.Estdata = <span class="built_in">append</span>(msg.Estdata, estdata&#123;v[subtokenPtid], v[subtokenEto], fl&#125;)</span><br><span class="line">&#125;</span><br><span class="line">mutexEstdata.Unlock()</span><br></pre></td></tr></table></figure>
+<p>事实上，排除特定用法，在协程中使用<code>mutex</code>(互斥锁)并不是一个好的选择。</p>
+<ul>
+<li>缺点 #2：伪共享</li>
+</ul>
+<p>通过线程或者协程分享内存并不是一个好的方式因为可能存在伪共享（一个在<code>CPU</code>缓存中的进程可以被另一个<code>CPU</code>缓存)。这意味着我们需要尽可能地避免通过线程和协程来共享那些需要修改的变量。</p>
+<p>在这个例子中，虽然，我不认为伪共享在输入的文件教少的情况下有一个很大的影响（在<code>Message</code>消息结构体中增加文件的性能测试结果或多或少是一样的），但在我看来这也是一个很重要的需要牢记的点。<br><br>现在让我们来看下好的并发处理：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> _, line := <span class="keyword">range</span> in &#123;</span><br><span class="line">    <span class="keyword">go</span> mapLine(line, ch)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在，<code>mapLine()</code>只接受两个参数：</p>
+<ul>
+<li><p>当前行</p>
+</li>
+<li><p><code>channel</code>通道，当前行处理完后，这里的通道不再简单地用来发生消息，也用来传送实际的结果。这意味着不应该使用协程去修改最后的消息结构。</p>
+</li>
+</ul>
+<p>结果在父级的协程中整合。（产生的<code>mapLine()</code>方法在各自的协程中被调用）</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">msg := Message&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> <span class="keyword">range</span> in &#123;</span><br><span class="line">    data := &lt;-ch</span><br><span class="line"></span><br><span class="line">    <span class="keyword">switch</span> data.(<span class="keyword">type</span>) &#123;</span><br><span class="line">        <span class="comment">// Modify msg variable</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个代码更加一致，在我看来，根据<code>Go</code>的原则：通过通信来共享内存。通过单一的协程来修改消息变量防止了可能由于并发导致的修改和伪共享问题。</p>
+<p>这部分代码潜在的问题是造成了每一行一个协程，这种实现将能够运行，因为<code>ADEXP</code>信息行数将不会太大，在这个简单实现中，一个请求将产生一个协程，在生成能力上将无法考量。一个更好的选择是创建一个协程池来复用协程。</p>
+<h2 id="行处理通知"><a href="#行处理通知" class="headerlink" title="行处理通知"></a>行处理通知</h2><p>在上面不好的代码中，一旦<code>mapLine()</code>处理完一行，我们需要在父级的协程中进行标识。这部分将通过使用<code>chan string</code>通道和方法的调用：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">ch &lt;- <span class="string">"ok"</span></span><br></pre></td></tr></table></figure>
+<p>因为父级协程并不会检查通道传过来的结果，较好的处理是通过<code>chan struct{}</code>使用<code>ch &lt;- struct{}{}</code>，或者更好的选择(<code>GC</code>会更差)是通过<code>chan interface{}</code>使用<code>ch &lt;- nil</code>处理。</p>
+<p>另一个类似的方法（在我看来甚至会更简洁）是使用<code>sync.WaitGroup</code>，因为当每一个<code>mapLine()</code>执行完了，父级的协程还需继续运行。</p>
+<h2 id="If条件判断"><a href="#If条件判断" class="headerlink" title="If条件判断"></a>If条件判断</h2><p>在<code>Go</code>的条件判断语句中，允许在条件前进行赋值。</p>
+<p>一个改进版的代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line">f, contains := factory[<span class="keyword">string</span>(token)]</span><br><span class="line"><span class="keyword">if</span> contains &#123;</span><br><span class="line">    <span class="comment">// Do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如下：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> f, contains := factory[sToken]; contains &#123;</span><br><span class="line">    <span class="comment">// Do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样代码的可读性更高。</p>
+<h2 id="Switch选择"><a href="#Switch选择" class="headerlink" title="Switch选择"></a>Switch选择</h2><p>代码中犯得另一个错误是没有设置<code>switch</code>中的<code>default</code>选项：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">switch</span> simpleToken.token &#123;</span><br><span class="line"><span class="keyword">case</span> tokenTitle:</span><br><span class="line">    msg.Title = value</span><br><span class="line"><span class="keyword">case</span> tokenAdep:</span><br><span class="line">    msg.Adep = value</span><br><span class="line"><span class="keyword">case</span> tokenAltnz:</span><br><span class="line">    msg.Alternate = value </span><br><span class="line"><span class="comment">// Other cases</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><br>如果开发者能够考虑到所有的情况，<code>switch</code>的<code>default</code>项是可选的，但是像下面这样捕获特殊的情况肯定会更好。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">switch</span> simpleToken.token &#123;</span><br><span class="line"><span class="keyword">case</span> tokenTitle:</span><br><span class="line">    msg.Title = value</span><br><span class="line"><span class="keyword">case</span> tokenAdep:</span><br><span class="line">    msg.Adep = value</span><br><span class="line"><span class="keyword">case</span> tokenAltnz:</span><br><span class="line">    msg.Alternate = value</span><br><span class="line"><span class="comment">// Other cases    </span></span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">    log.Errorf(<span class="string">"unexpected token type %v"</span>, simpleToken.token)</span><br><span class="line">    <span class="keyword">return</span> Message&#123;&#125;, fmt.Errorf(<span class="string">"unexpected token type %v"</span>, simpleToken.token)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>处理<code>default</code>选项会帮助开发者捕获开发过程中可能造成的<code>bugs</code>。</p>
+<h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><p><code>parseComplexLines()</code>是一个解析复杂<code>token</code>的方法，在不好的代码中是使用递归来处理：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">parseComplexLines</span><span class="params">(in <span class="keyword">string</span>, currentMap <span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>, </span></span></span><br><span class="line"><span class="function"><span class="params">	out []<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>)</span> []<span class="title">map</span>[<span class="title">string</span>]<span class="title">string</span></span> &#123;</span><br><span class="line"></span><br><span class="line">    match := regexpSubfield.Find([]<span class="keyword">byte</span>(in))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> match == <span class="literal">nil</span> &#123;</span><br><span class="line">        out = <span class="built_in">append</span>(out, currentMap)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sub := <span class="keyword">string</span>(match)</span><br><span class="line"></span><br><span class="line">    h, l := parseLine(sub)</span><br><span class="line"></span><br><span class="line">    _, contains := currentMap[<span class="keyword">string</span>(h)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> contains &#123;</span><br><span class="line">        out = <span class="built_in">append</span>(out, currentMap)</span><br><span class="line">        currentMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    currentMap[<span class="keyword">string</span>(h)] = <span class="keyword">string</span>(strings.Trim(l, stringEmpty))</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> parseComplexLines(in[<span class="built_in">len</span>(sub):], currentMap, out)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是<code>Go</code>不支持尾调用优化递归，好的代码使用迭代算法能得到同样的结果：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">parseComplexToken</span><span class="params">(token <span class="keyword">string</span>, value []<span class="keyword">byte</span>)</span> <span class="title">interface</span></span>&#123;&#125; &#123;</span><br><span class="line">    <span class="keyword">if</span> value == <span class="literal">nil</span> &#123;</span><br><span class="line">        log.Warnf(<span class="string">"Empty value"</span>)</span><br><span class="line">        <span class="keyword">return</span> complexToken&#123;token, <span class="literal">nil</span>&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> v []<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span></span><br><span class="line">    currentMap := <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>)</span><br><span class="line"></span><br><span class="line">    matches := regexpSubfield.FindAll(value, <span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> _, sub := <span class="keyword">range</span> matches &#123;</span><br><span class="line">        h, l := parseLine(sub)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> _, contains := currentMap[<span class="keyword">string</span>(h)]; contains &#123;</span><br><span class="line">            v = <span class="built_in">append</span>(v, currentMap)</span><br><span class="line">            currentMap = <span class="built_in">make</span>(<span class="keyword">map</span>[<span class="keyword">string</span>]<span class="keyword">string</span>)</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        currentMap[<span class="keyword">string</span>(h)] = <span class="keyword">string</span>(bytes.Trim(l, stringEmpty))</span><br><span class="line">    &#125;</span><br><span class="line">    v = <span class="built_in">append</span>(v, currentMap)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> complexToken&#123;token, v&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二种写法在性能上会优于第一种。</p>
+<h2 id="常量管理"><a href="#常量管理" class="headerlink" title="常量管理"></a>常量管理</h2><p>我们需要管理一个常量来区分<code>ADEXP</code>和<code>ICAO</code>类型的消息。不好的写法如下：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    AdexpType = <span class="number">0</span> <span class="comment">// TODO constant</span></span><br><span class="line">    IcaoType  = <span class="number">1</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="string">``</span><span class="string">` </span></span><br><span class="line"><span class="string">反之，利用`</span>Go<span class="string">`的`</span><span class="literal">iota</span><span class="string">`（常量计数器）能写出更优雅的代码：</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">`</span><span class="string">``</span>Go</span><br><span class="line"><span class="keyword">const</span> (</span><br><span class="line">    AdexpType = <span class="literal">iota</span></span><br><span class="line">    IcaoType </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>输出的结果是一致的，但是规避了可能存在的错误。</p>
+<h2 id="接收方法"><a href="#接收方法" class="headerlink" title="接收方法"></a>接收方法</h2><p>每个转换提供一个函数来判断每个<code>Message</code>是非涉及到上一个级别（至少在350级以上的路线点）</p>
+<p>不好的代码如下：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">IsUpperLevel</span><span class="params">(m Message)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, r := <span class="keyword">range</span> m.RoutePoints &#123;</span><br><span class="line">        <span class="keyword">if</span> r.FlightLevel &gt; upperLevel &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>意味着我们必须把<code>Message</code>当函数的参数。反之，好的代码是提供一个简单的函数作为<code>Message</code>的接收者。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(m *Message)</span> <span class="title">IsUpperLevel</span><span class="params">()</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">    <span class="keyword">for</span> _, r := <span class="keyword">range</span> m.RoutePoints &#123;</span><br><span class="line">        <span class="keyword">if</span> r.FlightLevel &gt; upperLevel &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二种方法是更可取的，我们简单地让消息实现了一个特定的行为。这也是使用<code>Go</code>实现接口的第一步，如果某天我们需要创建另一个同一行为(<code>IsUpperLevel()</code>)的结构，这部分代码不需要被重构（因为<code>Message</code>已经继承该行为）。</p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>注释这部分的问题很明显，但是不好的注释很少被提及。</p>
+<p>另一方面，在真实项目中我尝试着去做很好的注释，尽管我并不是那种每行都会注释的人，我依然相信至少在每个函数和在一个复杂的函数的核心部分写上注释是非常重要的事情。</p>
+<p>举个例子：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Split each line in a goroutine</span></span><br><span class="line"><span class="keyword">for</span> _, line := <span class="keyword">range</span> in &#123;</span><br><span class="line">    <span class="keyword">go</span> mapLine(line, ch)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">msg := Message&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Gather the goroutine results</span></span><br><span class="line"><span class="keyword">for</span> <span class="keyword">range</span> in &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在注释中提供一个另外的例子也会提供很大的帮助：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Parse a line by returning the header (token name) and the value. </span></span><br><span class="line"><span class="comment">// Example: -COMMENT TEST must returns COMMENT and TEST (in byte slices)</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">parseLine</span><span class="params">(in []<span class="keyword">byte</span>)</span> <span class="params">([]<span class="keyword">byte</span>, []<span class="keyword">byte</span>)</span></span> &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的一个额外的例子对另一个开发者更好地了解当前这个项目很有帮助。</p>
+<p>最后同样重要的，根据<code>Go</code>的最佳实践，包本身也需要注释。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Package good is a library for parsing the ADEXP messages.</span></span><br><span class="line"><span class="comment">An intermediate format Message is built by the parser.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> good</span><br></pre></td></tr></table></figure>
+<h2 id="日志处理"><a href="#日志处理" class="headerlink" title="日志处理"></a>日志处理</h2><p>另一个很明显的问题是在缺少日志处理。因为我并不喜欢<code>Go</code>提供的标准日志<code>package</code>包，我在这个项目中使用一个叫<code>logrus</code>第三方的日志包。</p>
+<h2 id="go的fmt包"><a href="#go的fmt包" class="headerlink" title="go的fmt包"></a>go的fmt包</h2><p><code>Go</code>提供一个强力的工具集<code>go fmt</code>。遗憾的是我们忘记去利用它。</p>
+<h2 id="DDD"><a href="#DDD" class="headerlink" title="DDD"></a>DDD</h2><p><code>DDD</code>带来了通用语言的概念，以强调所有项目之间共享语言的重要性(<code>business experts</code>, <code>dev</code>, <code>testers</code> 等)。</p>
+<p>这点在这个项目上可能无法衡量，但是从整个项目的可维护性上来考虑，保持一个简单的兼容上下文结构的<code>Message</code>也是重要的一点。</p>
+<p>#性能结果</p>
+<p>在<code>i7-7700 4x 3.60Ghz</code>的硬件环境下，我通过基准测试来对比两种代码：</p>
+<ul>
+<li><p>好的代码： 60430 ns/op</p>
+</li>
+<li><p>不好的代码： 45996 ns/op</p>
+</li>
+</ul>
+<p>不好的代码比好的代码慢了超过30%。</p>
+<p>#结论</p>
+<p>在我看来，要对好的代码和不好的代码给出一个普遍的定义非常难。在一个环境中，一段代码可以被认为是好的代码，但在另一个环境中可能被认为是不好的代码。</p>
+<p>一个很明显的特征就是好的代码在给定的环境中能很好地解决问题，如果代码高效，但是不满足需求，那也是徒劳。</p>
+<p>同时，考虑代码的简洁、可维护性、高效对开发者来说非常重要。</p>
+<blockquote>
+<p>性能的提升伴随着代码复杂性的增加。</p>
+</blockquote>
+<p>一个好的开发者能够在给定的环境中在上面这些特征里找到一个平衡。就像在<code>DDD</code>里,<code>context</code>就是解决方案🙂。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      wuxinhua
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(翻译)/" title="Good Code vs Bad Code in Golang">https://wuxinhua.com/2018/04/30/Good-Code-vs-Bad-Code-in-Golang(翻译)/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。任何人可以进行转载、分享，但不可在未经允许的情况下用于商业用途！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/17/The-questions-about-react-and-redux-in-interview/" rel="next" title="关于React的几道面试题">
+                <i class="fa fa-chevron-left"></i> 关于React的几道面试题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/05/Contenteditable-The-Good-Part-And-The-Ugly/" rel="prev" title="contenteditable 踩坑记">
+                contenteditable 踩坑记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="wuxinhua">
+          <p class="site-author-name" itemprop="name">wuxinhua</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解析"><span class="nav-number">2.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逐步对比"><span class="nav-number">3.</span> <span class="nav-text">逐步对比</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#String类型-vs-byte类型"><span class="nav-number">4.</span> <span class="nav-text">String类型 vs  []byte类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#错误处理"><span class="nav-number">5.</span> <span class="nav-text">错误处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#避免嵌套"><span class="nav-number">6.</span> <span class="nav-text">避免嵌套</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#传值采用value还是reference"><span class="nav-number">7.</span> <span class="nav-text">传值采用value还是reference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并发"><span class="nav-number">8.</span> <span class="nav-text">并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#行处理通知"><span class="nav-number">9.</span> <span class="nav-text">行处理通知</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#If条件判断"><span class="nav-number">10.</span> <span class="nav-text">If条件判断</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Switch选择"><span class="nav-number">11.</span> <span class="nav-text">Switch选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#递归"><span class="nav-number">12.</span> <span class="nav-text">递归</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常量管理"><span class="nav-number">13.</span> <span class="nav-text">常量管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接收方法"><span class="nav-number">14.</span> <span class="nav-text">接收方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注释"><span class="nav-number">15.</span> <span class="nav-text">注释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志处理"><span class="nav-number">16.</span> <span class="nav-text">日志处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#go的fmt包"><span class="nav-number">17.</span> <span class="nav-text">go的fmt包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#DDD"><span class="nav-number">18.</span> <span class="nav-text">DDD</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="author" itemprop="copyrightHolder">Created with </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i> 
+  </span> by <a class="theme-link" href="https://github.com/M1seRy">
+     wuxinhua
+   </a>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+ <div class="theme-info">
+  Host by
+    <a class="theme-link" href="https://www.aliyun.com/">
+    Aliyun 
+   </a>
+ </div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="galleria"></div>
+<script type="text/javascript">
+    console.log('人生如逆旅，我亦是行人。')
+</script>
+  
+</body>
+</html>

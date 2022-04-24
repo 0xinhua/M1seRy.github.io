@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="3W1ar6zfFsnaL1sEvDzeytVUVg5oGeuj2l0iM0svaJw">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="SVG,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kevin's Notes" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="SVG算不上是一种新技术，早在2001年的时候，已经出台了相应的规范，它是一种使用XML描述2D图形的语言，利用SVG可以做非常多炫酷的动画，结合HTML5、CSS3，SVG就变得更加强大;本篇是SVG实践总结，主要包含以下方面的内容：    关于SVG SVG的视窗和坐标体系 SVG 实践 SVG 动画 附录    关于SVGSVG是”Scalable Vector Graphics”的简称，中">
+<meta name="keywords" content="SVG">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SVG动画实践">
+<meta property="og:url" content="https://wuxinhua.com/2018/01/20/The-svg-animation-in-action/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Notes">
+<meta property="og:description" content="SVG算不上是一种新技术，早在2001年的时候，已经出台了相应的规范，它是一种使用XML描述2D图形的语言，利用SVG可以做非常多炫酷的动画，结合HTML5、CSS3，SVG就变得更加强大;本篇是SVG实践总结，主要包含以下方面的内容：    关于SVG SVG的视窗和坐标体系 SVG 实践 SVG 动画 附录    关于SVGSVG是”Scalable Vector Graphics”的简称，中">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://assets.wuxinhua.com/caniusesvg.png">
+<meta property="og:image" content="https://assets.wuxinhua.com/blog/assets/echart-donus.png">
+<meta property="og:image" content="https://assets.wuxinhua.com/heart.png">
+<meta property="og:updated_time" content="2020-12-31T12:01:49.412Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SVG动画实践">
+<meta name="twitter:description" content="SVG算不上是一种新技术，早在2001年的时候，已经出台了相应的规范，它是一种使用XML描述2D图形的语言，利用SVG可以做非常多炫酷的动画，结合HTML5、CSS3，SVG就变得更加强大;本篇是SVG实践总结，主要包含以下方面的内容：    关于SVG SVG的视窗和坐标体系 SVG 实践 SVG 动画 附录    关于SVGSVG是”Scalable Vector Graphics”的简称，中">
+<meta name="twitter:image" content="https://assets.wuxinhua.com/caniusesvg.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wuxinhua.com/2018/01/20/The-svg-animation-in-action/">
+
+
+
+
+
+  <title>SVG动画实践 | Kevin's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146717212-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-146717212-1');
+</script>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button role="presentation">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archive
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wuxinhua.com/2018/01/20/The-svg-animation-in-action/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wuxinhua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">SVG动画实践</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-20T11:13:03+08:00">
+                2018-01-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SVG算不上是一种新技术，早在2001年的时候，已经出台了相应的规范，它是一种使用XML描述2D图形的语言，利用SVG可以做非常多炫酷的动画，结合HTML5、CSS3，SVG就变得更加强大;本篇是SVG实践总结，主要包含以下方面的内容：  </p>
+<ol>
+<li>关于SVG</li>
+<li>SVG的视窗和坐标体系</li>
+<li>SVG 实践</li>
+<li>SVG 动画</li>
+<li>附录  </li>
+</ol>
+<h4 id="关于SVG"><a href="#关于SVG" class="headerlink" title="关于SVG"></a>关于SVG</h4><p>SVG是”Scalable Vector Graphics”的简称，中文翻译成“可缩放矢量图形”，从字面意义上有两层意思：可缩放+矢量图，SVG是一种新的描述图像的方式，在这之前，我们用的较多的是以<em>.jpg、</em>.gif、*.png等后缀的图像，这类图像统称为位图，使用一个个像素点来描述图像，所以也叫点阵图；位图的缩放会出现失真的情况，当放大到一定程度会呈现出类似于马赛克的状态，而矢量图是使用点和线来描绘图形，缩放对矢量图的清晰度没有影响；类似于 HTML，SVG 也是使用元素、属性、和样式来构建文档，也存在兼容的问题，浏览器支持情况如下图所示，SVG提供了很全的元素来供我们使用，例如<code>&lt;circle&gt;</code>、 <code>&lt;ellipse&gt;</code>、<code>&lt;polyline&gt;</code>、<code>&lt;path&gt;</code>….依次代表创建圆、椭圆、曲线、路径等，其中<code>path</code>是最强大的一个标签，没有之一，文章的后面会再次提到。<br><img src="https://assets.wuxinhua.com/caniusesvg.png" alt="SVG"><br>SVG 的优势：</p>
+<ol>
+<li>SVG是可伸缩的，并且不依赖分辨率；</li>
+<li>与JPEG和GIF图像比起来，体积更小；</li>
+<li>纯粹的XML；</li>
+<li>多种方式嵌入到网页中；</li>
+<li>用于查看和打印高保真文档；</li>
+</ol>
+<h4 id="SVG的坐标体系"><a href="#SVG的坐标体系" class="headerlink" title="SVG的坐标体系"></a>SVG的坐标体系</h4><p>在进行SVG开发之前，由于不熟悉SVG的viewport、viewBox、坐标系等概念，饶了一些弯路，先熟悉一下viewBox视窗、坐标这几个概念：  </p>
+<h5 id="viewport"><a href="#viewport" class="headerlink" title="viewport"></a>viewport</h5><p>浏览器也有一个viewport，SVG的viewport与之类似，不同的是SVG这个窗口是可以修改的，“视窗”定义了我们以多大的区域来绘制SVG，这个概念类似于Canvas的画布，可以通过width和height来定义viewport,例如：<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- the viewport 大小为 500px 500px --&gt;</span><br><span class="line">&lt;svg width=&quot;500&quot; height=&quot;500&quot;&gt;</span><br><span class="line">    &lt;!-- SVG content --&gt;</span><br><span class="line">&lt;/svg&gt;</span><br></pre></td></tr></table></figure></p>
+<p>视窗可以指定具体的单位，如果没有给定，默认使用“px”单位，支持以下单位：px, %, pc, pt, mm, cm, in, ex, em, 不支持rem、vh、vw等单位。</p>
+<h6 id="坐标系"><a href="#坐标系" class="headerlink" title="坐标系"></a>坐标系</h6><p>SVG的坐标系和标准的笛卡尔直角坐标系还有点区别，svg坐标系的原点(0,0)位于左上角XY轴交叉点，X轴向右为正方向，向下为Y轴的正方向。</p>
+<h5 id="viewBox"><a href="#viewBox" class="headerlink" title="viewBox"></a>viewBox</h5><p>viewBox顾名思意“视区盒子”，viewBox和viewport有点让人傻傻分不清楚，其实viewBox是在viewport外存在的另一个坐标体系，用来辅助定义SVG的可视范围，我的理解是类似于使用截屏软件时，viewBox即截图框区域大小，我们可以移动这个框来选择截取位置，既能截全屏，也可以截取特定区域；当没有定义viewBox时，viewBox默认为viewport的大小，viewBox定义四个坐标，分别是：x  y  width  height，x:左上角横坐标，y:左上角纵坐标，width:宽度，height:高度，通过下面的代码来查看viewBox起的作用：  </p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">&lt;!-- the viewport 大小为 300px 300px --&gt;</span><br><span class="line">&lt;svg class=&quot;circle-chart&quot; width=&quot;300&quot; height=&quot;300&quot;  xmlns=&quot;http://www.w3.org/2000/svg&quot;&gt;</span><br><span class="line">      &lt;circle class=&quot;pie&quot; stroke=&quot;#4285f4&quot; stroke-width=&quot;20&quot; stroke-dasharray=&quot;400,0&quot; stroke-linecap=&quot;round&quot; fill=&quot;none&quot; cx=&quot;0&quot; cy=&quot;0&quot; r=&quot;63.66197723675813&quot; /&gt;</span><br><span class="line">&lt;/svg&gt;</span><br></pre></td></tr></table></figure>
+<p>viewport的宽高均为300，定义一个圆心坐标为（0.0），周长为400的圆，那么圆半径 r = 400 / 2 * Math.PI = 63.66197723675813，圆的边宽度为30，即图中蓝色部分，在没有设置viewBox值的情况下，SVG的视区大小默认为viewport大小，由于坐标原点在左上角，所以我们只看到了圆环的右下1 / 4部分(图中#1所示)，如果想看到整个圆环，那么需要将viewBox视角往左上角方向移动，移动的距离为： r + stroke-width / 2 = 73.66197723675813的距离，如代码例子#2所示：</p>
+<blockquote>
+<p>viewBox=”-73.66197723675813 -73.66197723675813 300 300”</p>
+</blockquote>
+<p>但这并不是我想要的，我需要将圆环放置在视图的中心位置，那么viewBox的x、y坐标均为-150即可(如代码例子#3所示)  </p>
+<blockquote>
+<p>viewBox=”-150 -150 300 300”  </p>
+</blockquote>
+<h4 id="PreserveAspectRatio属性"><a href="#PreserveAspectRatio属性" class="headerlink" title="PreserveAspectRatio属性"></a>PreserveAspectRatio属性</h4><p>如果viewport和viewBox的宽高比不相同，你需要自己来指定如何在SVG阅读器（如浏览器）中显示SVG图像，你可以在SVG中使用preserveAspectRatio属性来指定，preserveAspetRation属性指出了如何缩放及如果对齐viewBox到viewport上,defer参数是可选值，它仅仅在image元素上应用preserveAspectRatio属性时才使用。preserveAspectRatio的align参数是否强制进行均匀的缩放,如果align设置为none，图形会被缩放以适应viewport大小，而不会管它的宽高比。可以将它想象为CSS中的background-position属性,viewBox就好像是背景图像，使用不同的align值就好比在viewport中使用不同的background-position值来定位viewBox一样，</p>
+<blockquote>
+<p>preserveAspectRatio = defer? align meetOrSlice    </p>
+</blockquote>
+<p>align有以下9种取值：<br><strong>xMinYMin</strong>：viewBox的<min-x>对齐viewport的最小X值，min-y对齐viewport的最小Y值。<br><strong>xMinYMid</strong>：viewBox的<min-x>对齐viewport的最小X值，viewBox的Y轴中点对齐viewport的Y轴中点。<br><strong>xMinYMax</strong>：viewBox的<min-x>对齐viewport的最小X值，min-y+<height>对齐viewport的最大Y值。<br><strong>xMidYMin</strong>：viewBox的X轴中点对齐viewport的X轴中点，min-y对齐viewport的最小Y值。<br><strong>xMidYMid（默认值）</strong>：viewBox的X轴中点对齐viewport的X轴中点，viewBox的Y轴中点对齐viewport的Y轴中点。<br><strong>xMidYMax</strong>：viewBox的X轴中点对齐viewport的X轴中点，min-y+<height>对齐viewport的最大Y值。<br><strong>xMaxYMin</strong>：viewBox的<min-x>+<width>对齐viewportX轴的最大值，min-y对齐viewport的最小Y值。<br><strong>xMaxYMid</strong>：viewBox的<min-x>+<width>对齐viewportX轴的最大值，viewBox的Y轴中点对齐viewport的Y轴中点。<br><strong>xMaxYMax</strong>：viewBox的<min-x>+<width>对齐viewportX轴的最大值，min-y+<height>对齐viewport的最大Y值。  </height></width></min-x></width></min-x></width></min-x></height></height></min-x></min-x></min-x></p>
+<h4 id="SVG实践"><a href="#SVG实践" class="headerlink" title="SVG实践"></a>SVG实践</h4><h5 id="利用SVG实现一个环形图表"><a href="#利用SVG实现一个环形图表" class="headerlink" title="利用SVG实现一个环形图表"></a>利用SVG实现一个环形图表</h5><p>给定数据，利用SVG实现一个类似甜甜圈🍩的按百分比划分的环形图，如下图所示:</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> data = [</span><br><span class="line">                &#123;<span class="attr">value</span>:<span class="number">335</span>, <span class="attr">name</span>:<span class="string">'直接访问'</span>&#125;, <span class="comment">// pie1</span></span><br><span class="line">                &#123;<span class="attr">value</span>:<span class="number">310</span>, <span class="attr">name</span>:<span class="string">'邮件营销'</span>&#125;, <span class="comment">// pie2</span></span><br><span class="line">                &#123;<span class="attr">value</span>:<span class="number">234</span>, <span class="attr">name</span>:<span class="string">'联盟广告'</span>&#125;, <span class="comment">// pie3</span></span><br><span class="line">                &#123;<span class="attr">value</span>:<span class="number">135</span>, <span class="attr">name</span>:<span class="string">'视频广告'</span>&#125;, <span class="comment">// pie4</span></span><br><span class="line">                &#123;<span class="attr">value</span>:<span class="number">1548</span>, <span class="attr">name</span>:<span class="string">'搜索引擎'</span>&#125; <span class="comment">// pie5</span></span><br><span class="line">    ]</span><br></pre></td></tr></table></figure>
+<p><img src="https://assets.wuxinhua.com/blog/assets/echart-donus.png" alt="donut"></p>
+<p><strong>两种思路：</strong></p>
+<ol>
+<li>利用描边和偏移stroke-dashoffset来完成（下面#4中例子）;  </li>
+<li>按比例确定扇区的起始位置，利用path绘制各饼图，中间部分用另一个圆形遮盖 ;  </li>
+</ol>
+<p>按第一种思路，利用SVG神奇的stroke属性来帮我们完成绘图,stroke包含以下几个属性：<br>  <strong>stroke-width</strong>: 定义一条线，文本或元素轮廓厚度<br>  <strong>stroke-linecap</strong>: 描边端点表现形式 butt、round、square<br>  <strong>stroke-dasharray</strong>: 用于创建虚线<br>  <strong>stroke-dashoffset</strong>: 偏移位置<br>利用dasharray画出第一个扇区，描边的长度等于它弧长，第二个扇区偏移至第一个扇区结束位置，理一下描边思路，伪代码如下： <br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">// 伪代码</span><br><span class="line">// 总数</span><br><span class="line">lat total = 335 + 310 + 234 + 135 + 1548 ; // 2562</span><br><span class="line">// 周长</span><br><span class="line">let circumference = 400;</span><br><span class="line">// pie1扇区的弧长</span><br><span class="line">dash1 = 335 / total * circumference;  // 52.30288836846214</span><br><span class="line">offset1 = 0;</span><br><span class="line">// pie2弧长算法同pie1,第二个扇区的偏移dashoffset</span><br><span class="line">offset2 = 周长 - 之前扇区的周长 + 第一个扇区的偏移量</span><br><span class="line">~ 以此类推求出每个扇区的dasharray值 和 dashoffset值</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">// 虚线值和偏移量值</span><br><span class="line"><span class="selector-class">.chart5</span> <span class="selector-tag">circle</span><span class="selector-class">.pie1</span> &#123;</span><br><span class="line">  <span class="attribute">stroke-dasharray</span>: <span class="number">52.30288836846214</span> <span class="number">347.69711163153784</span>;</span><br><span class="line">  <span class="attribute">stroke-dashoffset</span>: <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.chart5</span> <span class="selector-tag">circle</span><span class="selector-class">.pie2</span> &#123;</span><br><span class="line">  <span class="attribute">stroke-dasharray</span>: <span class="number">48.39968774395004</span> <span class="number">351.60031225604996</span>;</span><br><span class="line">  <span class="attribute">stroke-dashoffset</span>: <span class="number">347.69711163153784</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.chart5</span> <span class="selector-tag">circle</span><span class="selector-class">.pie3</span> &#123;</span><br><span class="line">  <span class="attribute">stroke-dasharray</span>: <span class="number">36.53395784543326</span> <span class="number">363.46604215456676</span>;</span><br><span class="line">  <span class="attribute">stroke-dashoffset</span>: <span class="number">299.2974238875878</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.chart5</span> <span class="selector-tag">circle</span><span class="selector-class">.pie4</span> &#123;</span><br><span class="line">  <span class="attribute">stroke-dasharray</span>: <span class="number">21.07728337236534</span> <span class="number">378.92271662763466</span>;</span><br><span class="line">  <span class="attribute">stroke-dashoffset</span>: <span class="number">262.76346604215456</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.chart5</span> <span class="selector-tag">circle</span><span class="selector-class">.pie5</span> &#123;</span><br><span class="line">  <span class="attribute">stroke-dasharray</span>: <span class="number">241.68618266978922</span> <span class="number">158.31381733021078</span>;</span><br><span class="line">  <span class="attribute">stroke-dashoffset</span>: <span class="number">241.68618266978922</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>环形图结果如下图#6所示：  </p>
+<iframe height="375" scrolling="no" title="svg_pie_chart" src="//codepen.io/amnEs1a/embed/wpNWWq/?height=375&theme-id=0&default-tab=html,result&embed-version=2" frameborder="no" allowtransparency="true" allowfullscreen="true" style="width: 100%;">See the Pen <a href="https://codepen.io/amnEs1a/pen/wpNWWq/" target="_blank" rel="noopener">svg_pie_chart</a> by kevin (<a href="https://codepen.io/amnEs1a" target="_blank" rel="noopener">@amnEs1a</a>) on <a href="https://codepen.io" target="_blank" rel="noopener">CodePen</a>.<br></iframe>
+
+
+<h4 id="SVG-动画"><a href="#SVG-动画" class="headerlink" title="SVG 动画"></a>SVG 动画</h4><p>上面#4的例子就是使用css3的Animation来实现的，因为SVG类似于 HTML，所以CSS3的三大利器(Transitions, Transforms和Animation)同样适用于SVG；SVG的动画还可以通过定义animation elements标签来实现（#5例子），这些标签最初是在<code>SMIL</code>动画规范中定义的，CSS能做的SMIL都能做，如果你偏向于使用JavaScript，可以试试<a href="http://snapsvg.io/" target="_blank" rel="noopener">snapsvg</a>；</p>
+<blockquote>
+<p>the Snap.svg JavaScript library makes working with your SVG assets as easy as jQuery makes working with the DOM.  </p>
+</blockquote>
+<p>snapsvg被定义为<code>SVG界的jQuery</code>，让我们更方便得定义SVG动画。JavaScript实现动画的缺点是当SVG嵌入到img标签或者作为背景图片放入background-image属性中时，动画不起作用，但是例如SVG的path标签，通过定义d属性值来定义path的形状，这部分又无法通过CSS来实现，所以SIML可以说是弥补以上两者的一些缺陷，这里介绍一下使用SVG的SMIL；<br>SMIL允许：  </p>
+<ol>
+<li>变动一个元素的数字属性（x、y……）  </li>
+<li>变动变形属性（translation或rotation）  </li>
+<li>将颜色属性作为动画  </li>
+<li>按照运动轨迹移动  </li>
+</ol>
+<blockquote>
+<p>As of Chrome 45.0, SMIL animations are deprecated in favor of CSS animations and Web animations .    </p>
+</blockquote>
+<p>来看下浏览器对SMIL的支持情况，值得注意的是自Chrome 45.0起，SMIL动画就被废弃了，并且会在console中给出警告提示，推荐使用CSS动画和Web动画。<br>前面三个CSS3基本都能实现，厉害的是第4个，来体验一下SVG实现动画的几种方式：  </p>
+<h5 id="animate属性"><a href="#animate属性" class="headerlink" title="animate属性"></a>animate属性</h5><p>通过添加SVG动画元素，比如<animate>到SVG元素内部来实现动画，对<animate> 元素来说，重要的属性有：<br>attributeName：变动的属性的属性名。<br>attributeType：属性类型<br>from：变动的初始值。<br>to：变动的终值<br>dur：动画的持续时间<br>fill: 是否保留动画结果<br>repeatCount： 重复次数indefinite表示无限重复  </animate></animate></p>
+<p>会发现类似于CSS3 animate的定义方式，如何把我们写的animate标签作用于SVG上呢？SMIL提供了两种方式：  </p>
+<ol>
+<li>将animate标签放包裹在SVG标签中：  </li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">circle</span> <span class="attr">id</span>=<span class="string">"chart5"</span> <span class="attr">...</span> &gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">animate</span> <span class="attr">...</span> /&gt;</span> </span><br><span class="line">  <span class="comment">&lt;!-- animate动画标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">rect</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>使用<code>xlink:href</code>属性，指定作用于对应id标签：  </li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">circle</span> <span class="attr">id</span>=<span class="string">"chart5"</span> <span class="attr">...</span> &gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">animate</span> <span class="attr">xlink:href</span>=<span class="string">"#chart5"</span> <span class="attr">...</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">circle</span> &gt;</span></span><br></pre></td></tr></table></figure>
+<p>但省略xlink:href属性值后，动画默认作用于当前位置的父节点标签。  </p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">circle</span> <span class="attr">id</span>=<span class="string">"chart5"</span> <span class="attr">class</span>=<span class="string">"pie"</span> <span class="attr">stroke-linecap</span>=<span class="string">"round"</span> <span class="attr">fill</span>=<span class="string">"none"</span> <span class="attr">cx</span>=<span class="string">"0"</span> <span class="attr">cy</span>=<span class="string">"0"</span> <span class="attr">r</span>=<span class="string">"63.66197723675813"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">animate</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">xlink:href</span>=<span class="string">"#chart5"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">attributeName</span>=<span class="string">"stroke-dashoffset"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">from</span>=<span class="string">"400"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">to</span>=<span class="string">"0"</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">dur</span>=<span class="string">"6s"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">fill</span>=<span class="string">"remove"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">repeatCount</span>=<span class="string">"indefinite"</span></span></span><br><span class="line"><span class="tag">/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>例如上述代码定义了attributeName属性名为：<code>stroke-dashoffset</code>，在6s的时间内从400转换到0，<code>repeatCount</code>表示动画重复次数，<code>fill</code>类似于<code>animation-fill-mode</code>属性定义动画结束后是否回到最初的状态，有两个值：</p>
+<ol>
+<li>freeze 表示保留动画结束时的属性值；  </li>
+<li>remove 动画属性将被移除，默认是remove；  </li>
+</ol>
+<h5 id="animateTransform"><a href="#animateTransform" class="headerlink" title="animateTransform"></a>animateTransform</h5><p><code>&lt;animateTransform&gt;</code>元素可以执行变换属性的动画。这里的transform与CSS3的transform类似，例如需要执行一个旋转的动画，可以像下面这样定义：<br><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animateTransform</span> <span class="attr">attributeName</span>=<span class="string">"transform"</span> <span class="attr">begin</span>=<span class="string">"0s"</span> <span class="attr">dur</span>=<span class="string">"2s"</span>  <span class="attr">type</span>=<span class="string">"rotate"</span> <span class="attr">from</span>=<span class="string">"0deg"</span> <span class="attr">to</span>=<span class="string">"180deg"</span> <span class="attr">repeatCount</span>=<span class="string">"indefinite"</span> /&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="animateMotion"><a href="#animateMotion" class="headerlink" title="animateMotion"></a>animateMotion</h5><p>animateMotion元素可以让SVG各种图形沿着特定的path路径运动，例如：<br><figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animateMotion</span> <span class="attr">path</span>=<span class="string">"M10,80"</span> <span class="attr">begin</span>=<span class="string">"0s"</span> <span class="attr">dur</span>=<span class="string">"2s"</span> <span class="attr">repeatCount</span>=<span class="string">"indefinite"</span>/&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h5 id="利用SVG动画实现一个跳动的心❤️"><a href="#利用SVG动画实现一个跳动的心❤️" class="headerlink" title="利用SVG动画实现一个跳动的心❤️"></a>利用SVG动画实现一个跳动的心❤️</h5><p>这里将使用到<code>path</code>标签，可以把path理解成画笔，你只需要给定画笔移动的位置，path将完成绘图工作，path元素的形状是通过属性d定义的，属性d的值是一个“命令+参数”的序列，因为属性d采用的是用户坐标系统，所以不需标明单位，所以使用path绘图的前提是获得图形的：坐标 + 命令 + 参数；<br>path的命令用字母表示，有对应的含义，大写字母表示绝对定位，小写字母表示相对定位，例如：</p>
+<blockquote>
+<p> M 代表“移动到”某个位置<br>  L 代表直线<br>  Z 代表结束闭合路径<br>  ···</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">path</span> <span class="attr">class</span>=<span class="string">"path_ract"</span> <span class="attr">d</span>=<span class="string">"M0,0 L0,150 150,150 150,0 z"</span>&gt;</span> </span><br><span class="line"><span class="comment">&lt;!--从原点(0 , 0)的位置移动到(0 , 150)、（150,150）、（150,0 ） 再回到原点，并且画直线--&gt;</span></span><br></pre></td></tr></table></figure>
+<p>圆的d值比较复杂，给出画圆的d值公式，圆心坐标(cx, cy) 半径为r：</p>
+<pre><code class="html">&lt;path
+    d=&quot;
+      M cx cy
+      m -r, 0
+      a r,r 0 1,0 (r * 2),0
+      a r,r 0 1,0 -(r * 2),0
+    &quot;
+/&gt;
+</code></pre>
+<pre><code class="Javascript"><span class="comment">// 圆心坐标(cx, cy) 半径r</span>
+<span class="function"><span class="keyword">function</span> <span class="title">getcirclePath</span>(<span class="params">cx, cy, r</span>)</span>{
+    <span class="keyword">return</span> <span class="string">'M '</span>+cx+<span class="string">' '</span>+cy+<span class="string">' m -'</span>+r+<span class="string">', 0 a '</span>+r+<span class="string">','</span>+r+<span class="string">' 0 1,0 '</span>+(r*<span class="number">2</span>)+<span class="string">',0 a '</span>+r+<span class="string">','</span>+r+<span class="string">' 0 1,0 -'</span>+(r*<span class="number">2</span>)+<span class="string">',0'</span>;
+}
+</code></pre>
+<p>思路如下图所示，先利用path画一个正方形和两个圆，将圆分别向上和向右移动半径的距离，效果如下图所示<a href="https://codepen.io/amnEs1a/pen/ZvZOKr" target="_blank" rel="noopener">#codepen地址</a>，整个动画过程是使用SVG SMIL实现，可点击codepen的“return”按钮查看整个画图过程。<br><img src="https://assets.wuxinhua.com/heart.png" alt> </p>
+<iframe height="357" scrolling="no" title="svg_heart_animation" src="//codepen.io/amnEs1a/embed/ZvZOKr/?height=357&theme-id=0&default-tab=css,result&embed-version=2" frameborder="no" allowtransparency="true" allowfullscreen="true" style="width: 100%;">See the Pen <a href="https://codepen.io/amnEs1a/pen/ZvZOKr/" target="_blank" rel="noopener">svg_heart_animation</a> by kevin (<a href="https://codepen.io/amnEs1a" target="_blank" rel="noopener">@amnEs1a</a>) on <a href="https://codepen.io" target="_blank" rel="noopener">CodePen</a>.<br></iframe>    
+
+<p>之前在网上看了很多很酷炫的HTML5/SVG动画，这次自己用代码算是简单体验了一下，SVG确实很强大，好好利用起来，可以创造出很多有意思的事情，希望以上对刚刚接触到SVG的童鞋能有所启发和帮助，这期间翻了很资料和博客内容，包括SVG动画、Canvas和SVG的对比、大漠、张鑫旭写的这方面的文章等等，具体我列在下面的附录列表上；</p>
+<h4 id="附"><a href="#附" class="headerlink" title="附"></a>附</h4><p>1.理解SVG的坐标系和转换<br>  <a href="http://www.sarasoueidan.com/blog/svg-coordinate-systems/" target="_blank" rel="noopener">Part 1 — The viewport, viewBox, and preserveAspectRatio</a><br>  <a href="http://www.sarasoueidan.com/blog/svg-transformations/" target="_blank" rel="noopener">Part 2 - The transform Attribute</a><br>  <a href="http://sarasoueidan.com/blog/nesting-svgs" target="_blank" rel="noopener">Part 3 - Establishing New Viewports</a><br>2.<a href="http://tutorials.jenkov.com/svg/svg-viewport-view-box.html" target="_blank" rel="noopener">SVG - Scalable Vector Graphics教程</a><br>3.<a href="https://www.w3cplus.com/html5/svg-coordinates.html" target="_blank" rel="noopener">大漠老师的SVG系列教程</a><br>4.<a href="http://www.w3cplus.com/html5/svg-viewport-viewbox-preserveaspectratio.html" target="_blank" rel="noopener">理解SVG的viewport,viewBox,preserveAspectRatio</a><br>5.<a href="http://jonibologna.com/svg-viewbox-and-viewport/" target="_blank" rel="noopener">A Look At SVG viewBox and viewport</a><br>6.<a href="https://msdn.microsoft.com/library/gg193983.aspx" target="_blank" rel="noopener">SVG 与 Canvas：如何选择</a><br>7.<a href="http://www.zhangxinxu.com/wordpress/category/graphic/svg-graphic/" target="_blank" rel="noopener">SVG相关目录存档-张鑫旭</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      wuxinhua
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wuxinhua.com/2018/01/20/The-svg-animation-in-action/" title="SVG动画实践">https://wuxinhua.com/2018/01/20/The-svg-animation-in-action/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。任何人可以进行转载、分享，但不可在未经允许的情况下用于商业用途！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SVG/" rel="tag"># SVG</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/22/The-reading-book-list-in-2017/" rel="next" title="今年看的书📚(2017)">
+                <i class="fa fa-chevron-left"></i> 今年看的书📚(2017)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/17/The-questions-about-react-and-redux-in-interview/" rel="prev" title="关于React的几道面试题">
+                关于React的几道面试题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="wuxinhua">
+          <p class="site-author-name" itemprop="name">wuxinhua</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于SVG"><span class="nav-number">1.</span> <span class="nav-text">关于SVG</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SVG的坐标体系"><span class="nav-number">2.</span> <span class="nav-text">SVG的坐标体系</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#viewport"><span class="nav-number">2.1.</span> <span class="nav-text">viewport</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#坐标系"><span class="nav-number">2.1.1.</span> <span class="nav-text">坐标系</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#viewBox"><span class="nav-number">2.2.</span> <span class="nav-text">viewBox</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PreserveAspectRatio属性"><span class="nav-number">3.</span> <span class="nav-text">PreserveAspectRatio属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SVG实践"><span class="nav-number">4.</span> <span class="nav-text">SVG实践</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#利用SVG实现一个环形图表"><span class="nav-number">4.1.</span> <span class="nav-text">利用SVG实现一个环形图表</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SVG-动画"><span class="nav-number">5.</span> <span class="nav-text">SVG 动画</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#animate属性"><span class="nav-number">5.1.</span> <span class="nav-text">animate属性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#animateTransform"><span class="nav-number">5.2.</span> <span class="nav-text">animateTransform</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#animateMotion"><span class="nav-number">5.3.</span> <span class="nav-text">animateMotion</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#利用SVG动画实现一个跳动的心❤️"><span class="nav-number">5.4.</span> <span class="nav-text">利用SVG动画实现一个跳动的心❤️</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#附"><span class="nav-number">6.</span> <span class="nav-text">附</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="author" itemprop="copyrightHolder">Created with </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i> 
+  </span> by <a class="theme-link" href="https://github.com/M1seRy">
+     wuxinhua
+   </a>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+ <div class="theme-info">
+  Host by
+    <a class="theme-link" href="https://www.aliyun.com/">
+    Aliyun 
+   </a>
+ </div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="galleria"></div>
+<script type="text/javascript">
+    console.log('人生如逆旅，我亦是行人。')
+</script>
+  
+</body>
+</html>

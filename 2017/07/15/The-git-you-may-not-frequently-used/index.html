@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="3W1ar6zfFsnaL1sEvDzeytVUVg5oGeuj2l0iM0svaJw">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="git,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kevin's Notes" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="关于git rerere先卖个关子，在文章的最后会介绍这个命令，可能大多数人对git的认识停留在日常的pull、commit等，不信可以试着回答一下下面几个问题：  git push origin master命令中，origin 代表的是什么？如何查看和修改这个origin？ git fetch和git pull的不同？而git merge和rebase又有什么区别？  上面几个问题的答">
+<meta name="keywords" content="git">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你可能不知道git rerere">
+<meta property="og:url" content="https://wuxinhua.com/2017/07/15/The-git-you-may-not-frequently-used/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Notes">
+<meta property="og:description" content="关于git rerere先卖个关子，在文章的最后会介绍这个命令，可能大多数人对git的认识停留在日常的pull、commit等，不信可以试着回答一下下面几个问题：  git push origin master命令中，origin 代表的是什么？如何查看和修改这个origin？ git fetch和git pull的不同？而git merge和rebase又有什么区别？  上面几个问题的答">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-12-31T12:01:49.411Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你可能不知道git rerere">
+<meta name="twitter:description" content="关于git rerere先卖个关子，在文章的最后会介绍这个命令，可能大多数人对git的认识停留在日常的pull、commit等，不信可以试着回答一下下面几个问题：  git push origin master命令中，origin 代表的是什么？如何查看和修改这个origin？ git fetch和git pull的不同？而git merge和rebase又有什么区别？  上面几个问题的答">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wuxinhua.com/2017/07/15/The-git-you-may-not-frequently-used/">
+
+
+
+
+
+  <title>你可能不知道git rerere | Kevin's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146717212-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-146717212-1');
+</script>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button role="presentation">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archive
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wuxinhua.com/2017/07/15/The-git-you-may-not-frequently-used/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wuxinhua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">你可能不知道git rerere</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-15T02:02:37+08:00">
+                2017-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>关于git rerere先卖个关子，在文章的最后会介绍这个命令，可能大多数人对git的认识停留在日常的pull、commit等，不信可以试着回答一下下面几个问题：</p>
+<ul>
+<li>git push origin master命令中，origin 代表的是什么？如何查看和修改这个origin？</li>
+<li>git fetch和git pull的不同？而git merge和rebase又有什么区别？</li>
+</ul>
+<p>上面几个问题的答案请点击这里<a href="http://yonghaowu.github.io/2017/06/18/TheGitYouShouldKnow/" target="_blank" rel="noopener">你们仍未掌握那天所学的 git 知识</a>查看，而这篇你可以理解为一些平时不怎么用到但却很实用的git命令，希望我总结的这些能进一步加强你的git技能。</p>
+<p>如果你还没用过git,可以在你的浏览器上输入<a href="http://try.github.io/" target="_blank" rel="noopener">try.github.io</a>去探索git的世界。</p>
+<h3 id="git-alias"><a href="#git-alias" class="headerlink" title="git alias"></a>git alias</h3><p>敲git pull origin master 多了你可能就想看能不能少敲几个字符，和linux的alias一样,你可以对git命令设置简单的名字。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git config --global alias.st status</span><br></pre></td></tr></table></figure>
+<p>当然你也可以在.gitconfig文件一起配置，例如我的.gitconfig中 alias配置：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[<span class="built_in">alias</span>]</span><br><span class="line">    ss = status</span><br><span class="line">    ct = commit</span><br><span class="line">    ck = checkout</span><br><span class="line">    bh = branch</span><br><span class="line">    pl = pull</span><br><span class="line">    ph = push</span><br><span class="line">    pom = pull origin master</span><br><span class="line">    pom3 = pull origin master3.0</span><br><span class="line">    df = diff</span><br><span class="line">    lg = <span class="built_in">log</span> --graph --pretty=format:<span class="string">"%Cgreen(%h)%Creset-%d-%s by %C(yellow)%cN%Creset %cr"</span> --abbrev-commit --date=relative</span><br><span class="line">    ckb = checkout -b</span><br></pre></td></tr></table></figure>
+<h3 id="git-show"><a href="#git-show" class="headerlink" title="git show"></a>git show</h3><p>查看某个文件的修改历史</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git <span class="built_in">log</span> --pretty=oneline <span class="comment">#filename</span></span><br><span class="line">git show 136e847550bfbd68c65e0b4dd617ce05a3d0af70 // 查看提交改动</span><br></pre></td></tr></table></figure>
+<h3 id="git-submodule"><a href="#git-submodule" class="headerlink" title="git submodule"></a>git submodule</h3><p>添加子项目代码</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git submodule add 仓库地址 路径</span><br></pre></td></tr></table></figure>
+<p>初始化下载子项目代码<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git submodule update --init --recursive</span><br></pre></td></tr></table></figure></p>
+<h3 id="commit-–amend"><a href="#commit-–amend" class="headerlink" title="commit –amend"></a>commit –amend</h3><p>修改你的提交信息</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git commit --amend</span><br></pre></td></tr></table></figure>
+<h3 id="git-tag"><a href="#git-tag" class="headerlink" title="git tag"></a>git tag</h3><p>给当前代码打上版本号;<br>这个非常实用，可以查看当前的标签，也可以给当前版本打上标签。<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git tag</span><br></pre></td></tr></table></figure></p>
+<h3 id="git-stash"><a href="#git-stash" class="headerlink" title="git stash"></a>git stash</h3><p>暂存你的改动</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git stash</span><br></pre></td></tr></table></figure>
+<p>如果你有改动没有commit,当你checkout分支时，git会提示你先commit，这时可以使用stash暂存这些改动，然后使用git stash pop取出来。  </p>
+<h3 id="git-add-p"><a href="#git-add-p" class="headerlink" title="git add -p"></a>git add -p</h3><p>当你有多个改动，可能得提交在多个commit中，这时可以使用git add -p 一个个添加。<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git add -p</span><br></pre></td></tr></table></figure></p>
+<h3 id="git-remote-prune"><a href="#git-remote-prune" class="headerlink" title="git remote prune"></a>git remote prune</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">git remote prune</span><br></pre></td></tr></table></figure>
+<p>当我们删除了远程分支，使用git branch -a 查看本地和远程的分支时,会发现有些分支在远程已经删除了，但在本地仍然可以看到这些已经删除的远程分支。<br>可以使用git remote show origin 来查看关于origin远程分支、本地分支的详细信息，提示你使用git remote prune origin来清理这些分支。</p>
+<h3 id="git-blame"><a href="#git-blame" class="headerlink" title="git blame"></a>git blame</h3><p>挑毛病利器</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git blame #filename</span><br></pre></td></tr></table></figure>
+<p>查找文件的每一处改动历史，显示提交commit号、作者、时间、改动等。</p>
+<h3 id="git-log-–pretty-format"><a href="#git-log-–pretty-format" class="headerlink" title="git log –pretty=format"></a>git log –pretty=format</h3><p>git log是查看git历史的常用命令，但是很多时候输出的信息并不是很直观(也可以尝试一下git shortlog)，有时我们想看更多或更少的信息，这里可以使用format来定制你的log输出格式，简单点的可以这样<br><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git log --format=oneline --abbrev-commit</span><br></pre></td></tr></table></figure></p>
+<p>例如这是我的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">git log --graph --pretty=format:&quot;%Cgreen(%h)%Creset-%d-%s by %C(yellow)%cN%Creset %cr&quot; --abbrev-commit --date=relative</span><br></pre></td></tr></table></figure>
+<p>具体可以参照<a href="http://ruby-china.org/topics/939" target="_blank" rel="noopener">这里</a>.</p>
+<h3 id="git-rerere"><a href="#git-rerere" class="headerlink" title="git rerere"></a>git rerere</h3><p>帮助你解决冲突</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"># 开启git rerere</span><br><span class="line">git config --global rerere.enabled true</span><br></pre></td></tr></table></figure>
+<p>rerere = reuse recorded resolution<br>它会让Git记住你是如何解决某个文件的两个版本之间的conflict，这样在下次Git遇到同样的文件在相同的两个版本间发生冲突时，可以自动帮你使用相同的方法解决冲突。<br>具体如何开启使用点击查看<a href="https://ruby-china.org/topics/15809?utm_campaign=CodeTengu&amp;utm_medium=email&amp;utm_source=CodeTengu_102" target="_blank" rel="noopener">git rerere</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      wuxinhua
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wuxinhua.com/2017/07/15/The-git-you-may-not-frequently-used/" title="你可能不知道git rerere">https://wuxinhua.com/2017/07/15/The-git-you-may-not-frequently-used/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。任何人可以进行转载、分享，但不可在未经允许的情况下用于商业用途！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/git/" rel="tag"># git</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/14/Migrating-webpack-from-v1-to-v2/" rel="next" title="webpack v2升级踩坑笔记">
+                <i class="fa fa-chevron-left"></i> webpack v2升级踩坑笔记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/16/Book-review-Road-to-Heaven/" rel="prev" title="《空谷幽兰》书评">
+                《空谷幽兰》书评 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="wuxinhua">
+          <p class="site-author-name" itemprop="name">wuxinhua</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#git-alias"><span class="nav-number">1.</span> <span class="nav-text">git alias</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-show"><span class="nav-number">2.</span> <span class="nav-text">git show</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-submodule"><span class="nav-number">3.</span> <span class="nav-text">git submodule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#commit-–amend"><span class="nav-number">4.</span> <span class="nav-text">commit –amend</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-tag"><span class="nav-number">5.</span> <span class="nav-text">git tag</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-stash"><span class="nav-number">6.</span> <span class="nav-text">git stash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-add-p"><span class="nav-number">7.</span> <span class="nav-text">git add -p</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-remote-prune"><span class="nav-number">8.</span> <span class="nav-text">git remote prune</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-blame"><span class="nav-number">9.</span> <span class="nav-text">git blame</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-log-–pretty-format"><span class="nav-number">10.</span> <span class="nav-text">git log –pretty=format</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#git-rerere"><span class="nav-number">11.</span> <span class="nav-text">git rerere</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="author" itemprop="copyrightHolder">Created with </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i> 
+  </span> by <a class="theme-link" href="https://github.com/M1seRy">
+     wuxinhua
+   </a>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+ <div class="theme-info">
+  Host by
+    <a class="theme-link" href="https://www.aliyun.com/">
+    Aliyun 
+   </a>
+ </div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="galleria"></div>
+<script type="text/javascript">
+    console.log('人生如逆旅，我亦是行人。')
+</script>
+  
+</body>
+</html>

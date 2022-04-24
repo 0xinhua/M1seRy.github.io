@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="3W1ar6zfFsnaL1sEvDzeytVUVg5oGeuj2l0iM0svaJw">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Web Components,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kevin's Notes" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="2019 年第一次了解到 Web Components 这个概念，直到最近才开始尝试使用，这篇将简单介绍 Web Components，了解它的标准，解决什么问题以及它的优势，它提供的接口 API、兼容程度、如何使用它写一个简单的组件等。 什么是 Web Components随着前端框架的流行，组件化开发已经趋于常态，我们通常会把功能通用的模块抽取然后封装成单个组件，这样使用和维护起来都会变得更加">
+<meta name="keywords" content="Web Components">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初探 Web Components">
+<meta property="og:url" content="https://wuxinhua.com/2020/08/02/Web-Components/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Notes">
+<meta property="og:description" content="2019 年第一次了解到 Web Components 这个概念，直到最近才开始尝试使用，这篇将简单介绍 Web Components，了解它的标准，解决什么问题以及它的优势，它提供的接口 API、兼容程度、如何使用它写一个简单的组件等。 什么是 Web Components随着前端框架的流行，组件化开发已经趋于常态，我们通常会把功能通用的模块抽取然后封装成单个组件，这样使用和维护起来都会变得更加">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://assets.wuxinhua.com//blog/assets/web-components/shadow-tree.png">
+<meta property="og:image" content="https://assets.wuxinhua.com//blog/assets/web-components/shadow-dom.png">
+<meta property="og:image" content="https://assets.wuxinhua.com//blog/assets/web-components/web-components-api.png">
+<meta property="og:image" content="https://assets.wuxinhua.com//blog/assets/web-components/custom-elements.png">
+<meta property="og:image" content="https://assets.wuxinhua.com//blog/assets/web-components/html-templates.png">
+<meta property="og:image" content="https://assets.wuxinhua.com//blog/assets/web-components/shadow-dom-can-i-use.png">
+<meta property="og:updated_time" content="2020-12-31T12:01:49.413Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初探 Web Components">
+<meta name="twitter:description" content="2019 年第一次了解到 Web Components 这个概念，直到最近才开始尝试使用，这篇将简单介绍 Web Components，了解它的标准，解决什么问题以及它的优势，它提供的接口 API、兼容程度、如何使用它写一个简单的组件等。 什么是 Web Components随着前端框架的流行，组件化开发已经趋于常态，我们通常会把功能通用的模块抽取然后封装成单个组件，这样使用和维护起来都会变得更加">
+<meta name="twitter:image" content="https://assets.wuxinhua.com//blog/assets/web-components/shadow-tree.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wuxinhua.com/2020/08/02/Web-Components/">
+
+
+
+
+
+  <title>初探 Web Components | Kevin's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146717212-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-146717212-1');
+</script>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button role="presentation">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archive
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wuxinhua.com/2020/08/02/Web-Components/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wuxinhua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">初探 Web Components</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-02T16:58:01+08:00">
+                2020-08-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>2019 年第一次了解到 <a href="https://www.webcomponents.org/" target="_blank" rel="noopener">Web Components</a> 这个概念，直到最近才开始尝试使用，这篇将简单介绍 Web Components，了解它的标准，解决什么问题以及它的优势，它提供的接口 API、兼容程度、如何使用它写一个简单的组件等。</p>
+<h2 id="什么是-Web-Components"><a href="#什么是-Web-Components" class="headerlink" title="什么是 Web Components"></a>什么是 Web Components</h2><p>随着前端框架的流行，组件化开发已经趋于常态，我们通常会把功能通用的模块抽取然后封装成单个组件，这样使用和维护起来都会变得更加简单。但组件也受限于框架，例如一旦离开框架本身，组件就无法使用了，那有没有跨越框架范围的技术构建通用的组件呢？有的，就是今天要介绍的主角 Web Components。</p>
+<blockquote>
+<p>Web components are a set of web platform APIs that allow you to create new custom, reusable, encapsulated HTML tags to use in web pages and web apps.</p>
+</blockquote>
+<p>Web Components 是一套 Web API，允许你创建能在 Web 页面和应用中使用的自定义、可重用、封装的 HTML 标签。总体上来说 Web Components 是 “通过一种标准化的非侵入的方式封装一个组件”。Web Components 的概念最早由 Alex Russell 在2011年的 Fronteers大会上首次提出，2013年 Google 发布了 <a href="https://www.polymer-project.org/" target="_blank" rel="noopener">Polymer</a> 框架，是基于 <a href="https://www.polymer-project.org/" target="_blank" rel="noopener">Web Components API</a> 的实现，来推动 Web Components 的标准化。 2014 年的时候 Chrome 发布了早期的 v0 级别的组件规范，目前已更新到 v1 版本，被各大浏览器接受并支持。</p>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h2><ul>
+<li><p>标准化  </p>
+<p>  w3c 也不断在为 web 标准规范做努力，其中就包括 Web Components, 这套 API 规范成为标准被绝大多数浏览器支持后，我们就能开发更通用的组件了，不用花时间在框架的选择上，而是更聚焦在组件本身，通过 HTML、CSS、JS 来构建原生组件将会成为未来的前端标准。</p>
+</li>
+<li><p>非侵入式  </p>
+<p>  侵入性是指设计时的组件耦合太强了，引入这个组件导致其它代码或者设计要做相应的更改来适应新组件，而非侵入式的组件没有过多的依赖，方便迁移至其他地方。Web Components 组件能够很好的组织好自身的 HTML 结构、 CSS 样式、JS 代码，而且不会干扰到页面中的其他代码。</p>
+</li>
+<li><p>不依赖第三方库或框架  </p>
+<p>  Web Components 可以在不需要引入第三方的库或者框架的情况下通过浏览器的这套 API 创建可复用的组件，也可以和任意与 HTML 交互的 JavaScript 库和框架搭配使用。</p>
+</li>
+</ul>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><ul>
+<li><strong><em>HTML templates</em></strong></li>
+</ul>
+<p>HTML 内的 DOM 模板，在 template 元素内声明，内联样式 style 需要放置在它的内部，模板技术引入了两个重要的元素 template 和 slot ，template 提供模板的功能，slot 则被用来提供一个占位符hao，使 template 更灵活。</p>
+<p>template 标签本质上合 HTML 内置标签是一样的，但在 template 标签被激活前：</p>
+<ul>
+<li>标签不会被渲染，标签的内容也是会被隐藏 ，页面上看不到标签展示效果</li>
+<li>模板里的内容不会有副作用，例如  script 标签里不的脚本不会执行，图片不会加载，<br>视频不会播放</li>
+<li>基本上可以放置于任何节点上，例如 header、body 等；激活一个 template 最简单的方式是对它的内容做个深拷贝，然后再插入节点中，举个 🌰：</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Web Components<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h3</span>&gt;</span> example - 1<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">template</span> <span class="attr">id</span>=<span class="string">"mytemplate"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">""</span> <span class="attr">alt</span>=<span class="string">"image"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"comment"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="javascript">        <span class="built_in">console</span>.log(<span class="string">'template'</span>)</span></span><br><span class="line"><span class="undefined">      </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">var</span> t = <span class="built_in">document</span>.querySelector(<span class="string">'#mytemplate'</span>);</span><br><span class="line">t.content.querySelector(<span class="string">'img'</span>).src = <span class="string">'https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7b5bd4445364f3887f7b708c812ca48~tplv-k3u1fbpfcp-zoom-1.image'</span>;</span><br><span class="line"><span class="keyword">var</span> clone = <span class="built_in">document</span>.importNode(t.content, <span class="literal">true</span>);</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(clone);</span><br></pre></td></tr></table></figure>
+<p>用户信息卡片及 Slot 的实例：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- html --&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Web Components<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">template</span> <span class="attr">id</span>=<span class="string">"profile-tpl"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"profile-name"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">""</span> <span class="attr">class</span>=<span class="string">"profile-img"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="css">            <span class="selector-pseudo">:host</span> &#123;</span></span><br><span class="line"><span class="undefined">              display: block;</span></span><br><span class="line"><span class="undefined">              border: 1px solid red;</span></span><br><span class="line"><span class="undefined">            &#125;</span></span><br><span class="line"><span class="undefined">            img &#123;</span></span><br><span class="line"><span class="undefined">                max-width: 100px;</span></span><br><span class="line"><span class="undefined">                border-radius: 50%;</span></span><br><span class="line"><span class="undefined">                border: 1px solid seagreen;</span></span><br><span class="line"><span class="undefined">            &#125;</span></span><br><span class="line"><span class="undefined">         </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="keyword">let</span> template =  <span class="built_in">document</span>.querySelector(<span class="string">'#profile-tpl'</span>);</span><br><span class="line">template.content.querySelector(<span class="string">'.profile-img'</span>).src = <span class="string">'https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2bec4077911a44e789fa163ac05b3a18~tplv-k3u1fbpfcp-zoom-1.image'</span>;</span><br><span class="line">template.content.querySelector(<span class="string">'.profile-name'</span>).textContent = <span class="string">'bytedance'</span>;</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(template.content);</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="comment">&lt;!-- slot例子 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">slot</span> <span class="attr">name</span>=<span class="string">"my-tpl"</span>&gt;</span>default text<span class="tag">&lt;/<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">my-template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">slot</span>=<span class="string">"my-tpl"</span>&gt;</span>Let's have some different text!<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">my-template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong><em>Custom Elements</em></strong></p>
+<ul>
+<li>创建自定义 HTML 标签</li>
+<li>创建自定义 class 类</li>
+<li>使用生命周期的 Methods 方法</li>
+</ul>
+</li>
+</ul>
+<p>定义新的元素标签，可以被解析成 HTML。定义时首先需要声明一个类，这个类需要继承 HTMLElement 类，这样能够使用组件的一些生命周期回调函数，这些函数帮助我们增强组件的能力。总结一下要点：</p>
+<ul>
+<li>新的定制类需继承 HTMLElement</li>
+<li>当元素被挂载后会调用 connectedCallback 方法，代码中的this指向定制元素，这样我们可以在这个回调中使用 this.innerHtml 方法设置定制元素里的内容</li>
+<li>定制元素带来的问题是你在里面定义的样式可能会影响到外部的dom元素样式，如何进行隔离内，这是下面要介绍的一个 api  Shaodow DOM 。</li>
+</ul>
+<p>生命周期回调函数：</p>
+<ul>
+<li>connectedCallback 元素被插入DOM 时触发</li>
+<li>disconnectedCallback 元素从DOM 被移除时时触发</li>
+<li>adoptedCallback 被移到新的文档中时触发</li>
+<li>attributeChangedCallback 元素的属性被添加、移除、更新、取代时触发</li>
+</ul>
+<p>执行顺序(这里 attributeChangedCallback 在前面是因为需要调整配置，应该在插入 DOM 之前完成)：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">constructor</span> -&gt; attributeChangedCallback -&gt; connectedCallback</span><br></pre></td></tr></table></figure>
+<p>用自定义标签的方式来实现一个用户卡片(user-card)的例子：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Document<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h3</span>&gt;</span>Web Components<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">user-card</span>&gt;</span><span class="tag">&lt;/<span class="name">user-card</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- &lt;foo-bar&gt;&lt;/foo-bar&gt; --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"./index.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// index.js</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UserCard</span> <span class="keyword">extends</span> <span class="title">HTMLElement</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    <span class="keyword">this</span>.innerHTML = <span class="string">'user-card'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.customElements.define(<span class="string">'user-card'</span>, UserCard);</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong><em>Shadow DOM</em></strong></li>
+</ul>
+<p>这里的 Shaodow DOM 不应该跟常用的几个框架中的 Virtual DOM 混淆（Virtual DOM 主要是做性能层的优化），Shadow DOM 让我们能够创建一套完全独立于其它元素的 DOM 树，也叫“影子DOM”,有了它可以保证当前的这个组件是个具备独立功能的组件，与其它DOM元素互不干扰。跟 iframe 相似，是一个独立是沙盒，但它没有自己的 window，有一个轻量级 document，另外 shadowRoot 对象不支持所有的 DOM API ，支持主流的 getElementById、querySelector 和 querySelectorAll 等方法</p>
+<p><img src="https://assets.wuxinhua.com//blog/assets/web-components/shadow-tree.png" alt></p>
+<p><img src="https://assets.wuxinhua.com//blog/assets/web-components/shadow-dom.png" alt></p>
+<p>结构：</p>
+<ul>
+<li>Shadow host： 一个常规 DOM 节点，Shadow DOM 会被附加到这个节点上。</li>
+<li>Shadow tree：Shadow DOM 内部的 DOM 树。</li>
+<li>Shadow boundary：Shadow DOM 结束的地方，也是常规 DOM 开始的地方。</li>
+<li>Shadow root: Shadow tree 的根节点。</li>
+</ul>
+<p>Element.attachShadow() 方法会将 shadow DOM 树附加给特定元素，并返回它的 ShadowRoot。该方法只有一个对象类型，一个 Key 值 mode，可以设置为 open 或 closed 来指定该模式的打开和关闭。open 状态表示可以通过 JavaScript 来获取 Shadow DOM，close 状态 shadowRoot 将会返回 null。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">let</span> shadow = elementRef.attachShadow(&#123;<span class="attr">mode</span>: <span class="string">'open'</span>&#125;);</span><br><span class="line"><span class="keyword">let</span> myShadowDom = myCustomElem.shadowRoot;</span><br></pre></td></tr></table></figure>
+<p>例子：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">window</span>.customElements.define(<span class="string">'user-card'</span>, UserCard);</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FooBar</span> <span class="keyword">extends</span> <span class="title">HTMLElement</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    <span class="keyword">this</span>.attachShadow(&#123; <span class="attr">mode</span>: <span class="string">'open'</span> &#125;);</span><br><span class="line">    <span class="keyword">this</span>.innerHTML = <span class="string">'foo-bar'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  connectedCallback() &#123;</span><br><span class="line">    <span class="keyword">this</span>.shadowRoot.innerHTML = <span class="string">`</span></span><br><span class="line"><span class="string">      &lt;p&gt;I'm in the Shadow Root!&lt;/p&gt;</span></span><br><span class="line"><span class="string">    `</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.customElements.define(<span class="string">'foo-bar'</span>, FooBar);</span><br></pre></td></tr></table></figure>
+<p>并非所有 HTML 元素都可以开启 Shadow DOM，例如用 img 这样的非容器素作为 Shadow Host 不合理，而且会报错。目前支持的元素： article、 body、h1 ~ h6、header、 p、 aside、 div、aside、nav、span、section、main、footer、blockquote。</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">document</span>.createElement(<span class="string">'img'</span>).attachShadow(&#123;<span class="attr">mode</span>: <span class="string">'open'</span>&#125;);    </span><br><span class="line"><span class="comment">// =&gt; DOMException</span></span><br></pre></td></tr></table></figure>
+<p>另一个标准 HTML Imports (例如使用 &lt;link rel=”import” href=”myfile.html &gt;)，已废弃不再详述。</p>
+<h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p>2016 年 Safari 开始支持 Custom Elements 和 Shadow Dom，Firefox 则是在 2017 年跟进，目前各 API 兼容性如下：</p>
+<p><img src="https://assets.wuxinhua.com//blog/assets/web-components/web-components-api.png" alt></p>
+<p><img src="https://assets.wuxinhua.com//blog/assets/web-components/custom-elements.png" alt></p>
+<p><img src="https://assets.wuxinhua.com//blog/assets/web-components/html-templates.png" alt></p>
+<p><img src="https://assets.wuxinhua.com//blog/assets/web-components/shadow-dom-can-i-use.png" alt></p>
+<h2 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h2><ul>
+<li>使用 define 定义自定义标签的时候，为了避免与原有标签冲突，不能使用单个单词强制使用短横线连接</li>
+<li>定制元素标签不能是自闭合的，因为 HTML 只允许一部分元素可以自闭合。<user-card></user-card></li>
+<li>自定义标签的样式可以直接在全局定义，也可以把组件的样式应该与代码封装在一起，例如在 template 定义 style</li>
+</ul>
+<figure class="highlight"><table><tr><td class="code"><pre><span class="line">&lt;<span class="selector-tag">style</span>&gt;</span><br><span class="line">    <span class="selector-tag">user-card</span> &#123;</span><br><span class="line">        <span class="attribute">border</span>: <span class="number">1px</span> solid red;</span><br><span class="line">    &#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>与目前其它框架的比较</p>
+<ul>
+<li>Web Component 是 W3C 专门为组件化创建的标准，API 也是底层浏览器的 api，不存在跨框架无法使用的问题。</li>
+<li>而且从浏览器层面解决了一些作用域的问题，使用 Shadow DOM 封装样式,而且不需要再打包构建能直接跑在浏览器上，也实现了用 JavaScript 来写 JavaScript，用 CSS 来写 CSS ，用 HTML 来写 HTML，React 是用 JS 来写 CSS。</li>
+<li>标准的支持推动进展较慢，2013年提出 v0 版本，2016 年推进到 v1 版本，存在兼容性问题，坑还比较多</li>
+<li>主流三大框架 Vue 、React 、Angular 均支持使用 Web components，目前也有一些库或工具实现讲框架的组件转成通用的 Web components 组件，以及例如 <a href="https://github.com/hybridsjs/hybrids" target="_blank" rel="noopener">hybird</a> 这样的 UI 库能用 functional 方式来编写 Web components 组件</li>
+</ul>
+</li>
+<li><p>组件传值监听和事件绑定：</p>
+<ul>
+<li>如何传值及监听值的变化</li>
+<li>通过 DOM 属性，使用 getAttribute 能拿到组件设置的值，同时利用 setAttribute 也能更新组件的属性值</li>
+<li>同时利用 observedAttributes 及生命周期函数 attributeChangedCallback 完成对属性值的更新</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomComponent</span> <span class="keyword">extends</span> <span class="title">HTMLElement</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> get observedAttributes() &#123;</span><br><span class="line">    <span class="keyword">return</span> [<span class="string">"attributesName"</span>];</span><br><span class="line">  &#125;  attributeChangedCallback(name, oldValue, newValue) &#123;</span><br><span class="line">    <span class="comment">// 当属性值变更时做一些操作</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>事件绑定的方式比较简单，直接在自定义标签内添加事件监听即可，如果需要传递函数和内部触发函数，监听绑定 click 事件传入回调函数，在自定义组件内 dispatchEvent 触发点击事件</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Button</span> <span class="keyword">extends</span> <span class="title">HTMLElement</span> </span>&#123; </span><br><span class="line">    <span class="keyword">this</span>.$btn = <span class="keyword">this</span>._shadowRoot.querySelector(<span class="string">'button'</span>);</span><br><span class="line">    <span class="keyword">this</span>.$btn.addEventListener(<span class="string">'click'</span>, () =&gt; &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ClickCounter</span> <span class="keyword">extends</span> <span class="title">HTMLElement</span> </span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">this</span>._timesClicked = <span class="number">0</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">var</span> button = <span class="built_in">document</span>.createElement(<span class="string">"button"</span>);</span><br><span class="line">    button.textContent = <span class="string">"Click me"</span>;</span><br><span class="line">    button.onclick = <span class="function">(<span class="params">evt</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="keyword">this</span>._timesClicked++;</span><br><span class="line">      <span class="keyword">this</span>.dispatchEvent(<span class="keyword">new</span> CustomEvent(<span class="string">"clicked"</span>, &#123;</span><br><span class="line">        detail: <span class="keyword">this</span>._timesClicked</span><br><span class="line">      &#125;));</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">this</span>.append(button);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">customElements.define(<span class="string">"click-counter"</span>, ClickCounter);</span><br><span class="line"><span class="keyword">var</span> counter = <span class="built_in">document</span>.querySelector(<span class="string">"click-counter"</span>);</span><br><span class="line">counter.addEventListener(<span class="string">"clicked"</span>, (evt) =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(evt.detail);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="附"><a href="#附" class="headerlink" title="附"></a>附</h2><ul>
+<li><a href="https://github.com/webcomponents" target="_blank" rel="noopener">https://github.com/webcomponents</a></li>
+<li><a href="https://www.webcomponents.org/" target="_blank" rel="noopener">https://www.webcomponents.org/</a></li>
+<li><a href="https://github.com/dt-fe/weekly/issues/15" target="_blank" rel="noopener">精读《Web Components 的困境》</a></li>
+<li><a href="https://dmitriid.com/blog/2017/03/the-broken-promise-of-web-components/" target="_blank" rel="noopener">https://dmitriid.com/blog/2017/03/the-broken-promise-of-web-components/</a></li>
+<li><a href="https://robdodson.me/regarding-the-broken-promise-of-web-components/" target="_blank" rel="noopener">https://robdodson.me/regarding-the-broken-promise-of-web-components/</a></li>
+<li><a href="https://blog.revillweb.com/open-vs-closed-shadow-dom-9f3d7427d1af" target="_blank" rel="noopener">shadow dom open vs close</a></li>
+<li><a href="https://github.com/xufei/blog/issues/3" target="_blank" rel="noopener">从HTML Components的衰落看Web Components的危机 </a></li>
+<li><a href="https://zh-hans.reactjs.org/docs/web-components.html" target="_blank" rel="noopener">https://zh-hans.reactjs.org/docs/web-components.html</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      wuxinhua
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wuxinhua.com/2020/08/02/Web-Components/" title="初探 Web Components">https://wuxinhua.com/2020/08/02/Web-Components/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。任何人可以进行转载、分享，但不可在未经允许的情况下用于商业用途！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web-Components/" rel="tag"># Web Components</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/03/11/Too-Long-Dont-Read/" rel="next" title="TL;DR">
+                <i class="fa fa-chevron-left"></i> TL;DR
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/12/31/The-Daily-Notes-Of-2020/" rel="prev" title="知识的碎片（2020）">
+                知识的碎片（2020） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="wuxinhua">
+          <p class="site-author-name" itemprop="name">wuxinhua</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-Web-Components"><span class="nav-number">1.</span> <span class="nav-text">什么是 Web Components</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特点"><span class="nav-number">2.</span> <span class="nav-text">特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API"><span class="nav-number">3.</span> <span class="nav-text">API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容性"><span class="nav-number">4.</span> <span class="nav-text">兼容性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其它"><span class="nav-number">5.</span> <span class="nav-text">其它</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附"><span class="nav-number">6.</span> <span class="nav-text">附</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="author" itemprop="copyrightHolder">Created with </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i> 
+  </span> by <a class="theme-link" href="https://github.com/M1seRy">
+     wuxinhua
+   </a>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+ <div class="theme-info">
+  Host by
+    <a class="theme-link" href="https://www.aliyun.com/">
+    Aliyun 
+   </a>
+ </div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="galleria"></div>
+<script type="text/javascript">
+    console.log('人生如逆旅，我亦是行人。')
+</script>
+  
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="3W1ar6zfFsnaL1sEvDzeytVUVg5oGeuj2l0iM0svaJw">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="FE, 前端, Javascript, Nodejs, blog, 前端博客, React, Vue ">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kevin's Notes" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="We can only see a short distance ahead, but we can see plenty there that needs to be done. —— Alan Turing  Hi，欢迎你访问我的博客，可以叫我 xinhua 或英文名 Kevin ~ 🎉 我最近开始了一个 newsletter 项目： 321来信，如果你喜欢我推送的内容，欢迎邮箱或微信订">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kevin&#39;s Notes">
+<meta property="og:url" content="https://wuxinhua.com/about/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Notes">
+<meta property="og:description" content="We can only see a short distance ahead, but we can see plenty there that needs to be done. —— Alan Turing  Hi，欢迎你访问我的博客，可以叫我 xinhua 或英文名 Kevin ~ 🎉 我最近开始了一个 newsletter 项目： 321来信，如果你喜欢我推送的内容，欢迎邮箱或微信订">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://assets.wuxinhua.com/blog/assets/newsletter/image.png">
+<meta property="og:image" content="https://assets.wuxinhua.com//blog/assets/coder.gif">
+<meta property="og:updated_time" content="2022-04-14T14:01:53.351Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kevin&#39;s Notes">
+<meta name="twitter:description" content="We can only see a short distance ahead, but we can see plenty there that needs to be done. —— Alan Turing  Hi，欢迎你访问我的博客，可以叫我 xinhua 或英文名 Kevin ~ 🎉 我最近开始了一个 newsletter 项目： 321来信，如果你喜欢我推送的内容，欢迎邮箱或微信订">
+<meta name="twitter:image" content="https://assets.wuxinhua.com/blog/assets/newsletter/image.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wuxinhua.com/about/">
+
+
+
+
+
+  <title> | Kevin's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146717212-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-146717212-1');
+</script>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button role="presentation">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archive
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+  <header class="post-header">
+
+	<h2 class="post-title" itemprop="name headline"></h2>
+
+
+
+</header>
+
+    
+    
+      <blockquote>
+<p><em>We can only see a short distance ahead, but we can see plenty there that needs to be done.</em></p>
+<p><em>—— Alan Turing</em></p>
+</blockquote>
+<p>Hi，欢迎你访问我的博客，可以叫我 xinhua 或英文名 Kevin ~</p>
+<p>🎉 我最近开始了一个 newsletter 项目： <a href="https://321laixin.zhubai.love/" target="_blank" rel="noopener">321来信</a>，如果你喜欢我推送的内容，欢迎邮箱或微信订阅 ❤️</p>
+<p><img src="https://assets.wuxinhua.com/blog/assets/newsletter/image.png" alt></p>
+<p>我是一名软件开发工程师<img src="https://assets.wuxinhua.com//blog/assets/coder.gif" width="30" alt="https://assets.wuxinhua.com//blog/assets/coder.gif" style="max-width:100%;display:inline-block"> 在北京，会一些 JAVA 和移动端开发，目前专注于前端</p>
+<p>只要命运的齿轮沒有出差错，这个博客应该会一直更下去</p>
+<p>喜欢开源的东西，热爱互联网，一直保持一颗好奇心</p>
+<p>线上线下都很友好，热衷于在网上分享自己的知识、见解</p>
+<p>任何博客的问题、技术职业交流、找工作、或者打个招呼都可以通过邮箱 wuxinhua.cn@gmail.com 联系到我</p>
+<p>如果喜欢我写的东西也可以订阅博客的 <a href="https://wuxinhua.com/atom.xml">RSS</a></p>
+<p>更多:</p>
+<p><a href="https://github.com/M1seRy" target="_blank" rel="noopener">GitHub 🐙</a><br><a href="https://web.okjike.com/u/BC942F46-A5E2-40A0-B419-5AB8B3A02BE1" target="_blank" rel="noopener">日常朋友圈 🌎</a><br><a href="https://twitter.com/wuxinhua_cn" target="_blank" rel="noopener">Twitter 🐦</a><br><a href="http://music.163.com/#/user/home?id=15767523" target="_blank" rel="noopener">喜欢听的音乐 🎧</a></p>
+<p><br></p>
+<hr>
+<p>👋 Hi there，it’s Kevin ~ </p>
+<p>🌇 Days as Software Engineer at <a href="https://bytedance.com/en" target="_blank" rel="noopener">@Bytedance</a></p>
+<p>🌃 Nights as Motorcycle rider | Blogger | Reader |  Lifelong learner</p>
+<p>📍 Base Beijing, China</p>
+<p>📌 So nice to meet you here, always trying new things on Tech | Sport | Money | ₿itcoin etc</p>
+<p>☕️ Hobbies : 📚 📈 🏂 🏊 🏋️ 🫕 🏍 Looking for more ～</p>
+<p>📮 Email ：wuxinhua.cn@gmail.com</p>
+<p>More:</p>
+<p><a href="https://github.com/M1seRy" target="_blank" rel="noopener"> 🐙 GitHub</a><br><a href="https://web.okjike.com/u/BC942F46-A5E2-40A0-B419-5AB8B3A02BE1" target="_blank" rel="noopener">🌎 Daily</a><br><a href="https://twitter.com/wuxinhua_cn" target="_blank" rel="noopener">🐦 Twitter</a><br><a href="http://music.163.com/#/user/home?id=15767523" target="_blank" rel="noopener">🎧 Music</a></p>
+<p>By Kevin with ❤️ ~</p>
+
+    
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="wuxinhua">
+          <p class="site-author-name" itemprop="name">wuxinhua</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="author" itemprop="copyrightHolder">Created with </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i> 
+  </span> by <a class="theme-link" href="https://github.com/M1seRy">
+     wuxinhua
+   </a>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+ <div class="theme-info">
+  Host by
+    <a class="theme-link" href="https://www.aliyun.com/">
+    Aliyun 
+   </a>
+ </div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="galleria"></div>
+<script type="text/javascript">
+    console.log('人生如逆旅，我亦是行人。')
+</script>
+  
+</body>
+</html>

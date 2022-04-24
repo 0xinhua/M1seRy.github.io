@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-minimal.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="google-site-verification" content="3W1ar6zfFsnaL1sEvDzeytVUVg5oGeuj2l0iM0svaJw">
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="iOS 13 适配,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Kevin's Notes" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="前言目前 iOS 可下载的最新正式版是 13.3，早在今年 6 月份苹果向公众推出 iOS 13 的开发者预览版，在 9 月份发布 iOS 13.0 版本后，苹果又接连推出了 13.1 / 13.1.1 / 13.1.2，iOS 13.2 还因为频繁杀后台被用户吐槽新版本 Bug 太多。目前市场上主流的 iPhone 机型(包括iPhone 6s、6s Plus、7、7Plus、8、8Plus、S">
+<meta name="keywords" content="iOS 13 适配">
+<meta property="og:type" content="article">
+<meta property="og:title" content="适配 iOS 13">
+<meta property="og:url" content="https://wuxinhua.com/2019/11/02/Whats-new-in-iOS-13-and-adapting-app-to-new-version/index.html">
+<meta property="og:site_name" content="Kevin&#39;s Notes">
+<meta property="og:description" content="前言目前 iOS 可下载的最新正式版是 13.3，早在今年 6 月份苹果向公众推出 iOS 13 的开发者预览版，在 9 月份发布 iOS 13.0 版本后，苹果又接连推出了 13.1 / 13.1.1 / 13.1.2，iOS 13.2 还因为频繁杀后台被用户吐槽新版本 Bug 太多。目前市场上主流的 iPhone 机型(包括iPhone 6s、6s Plus、7、7Plus、8、8Plus、S">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://assets.wuxinhua.com/blog/assets/ios13/status-bar.png">
+<meta property="og:updated_time" content="2020-12-31T12:01:49.414Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="适配 iOS 13">
+<meta name="twitter:description" content="前言目前 iOS 可下载的最新正式版是 13.3，早在今年 6 月份苹果向公众推出 iOS 13 的开发者预览版，在 9 月份发布 iOS 13.0 版本后，苹果又接连推出了 13.1 / 13.1.1 / 13.1.2，iOS 13.2 还因为频繁杀后台被用户吐槽新版本 Bug 太多。目前市场上主流的 iPhone 机型(包括iPhone 6s、6s Plus、7、7Plus、8、8Plus、S">
+<meta name="twitter:image" content="https://assets.wuxinhua.com/blog/assets/ios13/status-bar.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"right","display":"hide","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://wuxinhua.com/2019/11/02/Whats-new-in-iOS-13-and-adapting-app-to-new-version/">
+
+
+
+
+
+  <title>适配 iOS 13 | Kevin's Notes</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-146717212-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-146717212-1');
+</script>
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Kevin's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button role="presentation">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            Archive
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            About
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://wuxinhua.com/2019/11/02/Whats-new-in-iOS-13-and-adapting-app-to-new-version/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="wuxinhua">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Kevin's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">适配 iOS 13</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-02T23:56:46+08:00">
+                2019-11-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>目前 iOS 可下载的最新正式版是 13.3，早在今年 6 月份苹果向公众推出 iOS 13 的开发者预览版，在 9 月份发布 iOS 13.0 版本后，苹果又接连推出了 13.1 / 13.1.1 / 13.1.2，iOS 13.2 还因为频繁杀后台被用户吐槽新版本 Bug 太多。目前市场上主流的 iPhone 机型(包括iPhone 6s、6s Plus、7、7Plus、8、8Plus、SE、X 、XS 、XS Max、XR、iPod touch 7代等）都兼容升级 iOS13 版本，但值得注意的是已不再支持 A7 或 A8 处理器的机型，仅限于 A9 处理器。</p>
+<p>Apple 在 10 月份推送了 iOS13 公开版后，iOS 用户进行更新版本，如果应用没有做适配会导致 Crash 、兼容适配等问题，这里记录一下当时适配过程遇到的一些问题以及体验移动开发的一些收获，由于对 iOS 开发、Swift 等并不是很熟悉，如内容有误，请及时斧正。 </p>
+<h2 id="功能更新"><a href="#功能更新" class="headerlink" title="功能更新"></a>功能更新</h2><p>在适配前应该先了解一下具体都做了哪些更新，先来看下这次的 iOS 13 带来的功能上的更新，有一些功能我也是比较期待的，这里归纳总结一下：</p>
+<ul>
+<li><p>视觉上的提升 - Dark mode</p>
+<ul>
+<li>毫无疑问 iOS 13 最受关注的功能点就是这个“能让你更方便熬夜”的暗黑模式，用户可以在 设置 - 显示与亮度 中更改深色模式设置，也可以在“选项”中根据日出与日落时间或者自定义时间段设置，目前 iOS 13 提供了根据日落时间和自定义时间段两种切换方式，这个版本系统还提供有针对黑夜模式的新壁纸。</li>
+</ul>
+</li>
+<li><p>控制中心优化及增强可操作性</p>
+<ul>
+<li>允许从控制中心直接操作 WiFi 蓝牙，长按 WiFi 、蓝牙等选项会弹出当前可用的网络、蓝牙设备列表；</li>
+<li>蜂窝煤提供低数据连接模式；</li>
+<li>更新音量调节 UI，禁音操作后，会在顶部弹出一个静音模式的通知；操作侧边栏音量键后，会在按键侧出现显示音量大小的条形图，还可以用手指触摸条滑动来调整声音；</li>
+</ul>
+</li>
+<li><p>增强 Safari</p>
+<ul>
+<li>在 Safari 中截屏的的时候多了一个屏幕选项，可以实现长截图了，甚至可以调整、编辑图片;</li>
+<li>允许直接将网页保存为PDF;</li>
+<li>增加下载管理器，可以在 设置 - Safari 浏览器 -下载项更改下载文件的默认存放位置；</li>
+<li>Safari 会在你设置了安全性较弱的密码时弹出警告</li>
+</ul>
+</li>
+<li><p>性能上的提升</p>
+<ul>
+<li>据 PPT 介绍 Face ID 解锁速度提升 30%，App Store 的应用程序提供新的压缩模式，使得 App 下载的体积减少 50% 左右，这意味着更快的应用更新速度，App 开启速度提升2倍。(具体数据这里没有实际测试);</li>
+</ul>
+</li>
+<li><p>照片和相机改进</p>
+<ul>
+<li>新的浏览视图，编辑功能更好用了，iOS 13 增强了照片编辑功能，包括自动修图功能，提供更多编辑参数等;</li>
+<li>相机功能优化，新的光效模式，更真实的人像效果，包括照片根据 AI 自动归类，照片标签会自动按照天、月以及年的时间进行分类;</li>
+</ul>
+</li>
+<li><p>Sign In With Apple</p>
+<ul>
+<li>目前国内很多 app 都有做第三方登陆，例如微信、微博、github 登陆等，苹果也来抢饭碗，推出了自己的第三方登陆功能：Sign In With Apple，可以通过已有的 Apple ID 来快速登录其它 app 和网站，App 和网站只能索取你的姓名和电邮地址，在 WWDC大会 演示中看到苹果甚至还可以隐藏真实的邮箱地址，让第三方产品难以追踪该账号的数据。</li>
+</ul>
+</li>
+<li><p>地图、Memoji、键盘优化等</p>
+</li>
+</ul>
+<p>这里没有全面列举这次功能上的更新，具体可网上查看 iOS13 的更新列表。 </p>
+<h2 id="API-层变动"><a href="#API-层变动" class="headerlink" title="API 层变动"></a>API 层变动</h2><h3 id="KVC"><a href="#KVC" class="headerlink" title="KVC"></a>KVC</h3><p>私有 KVC 在 iOS 开发中可以说是一个黑魔法，因为 KVC 可以访问和修改私有变量，经常会用于动态取值和设值。在 iOS 13 中苹果已不再允许这样使用。原项目代码中存在比较多这样使用的代码，例如 UISearchBar 通过 forKey 获取 searchField 然后修改 backgroundColor ，在新版本系统中会直接导致应用崩溃，或者 valueForKey、setValue:forKey 等方法获取修改属性均会报错。</p>
+<p>例如：</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">[_textField setValue:[<span class="built_in">UIColor</span> redColor] forKeyPath:<span class="string">@"_placeholderLabel.textColor"</span>];</span><br><span class="line"></span><br><span class="line">[_textField setValue:[<span class="built_in">UIFont</span> systemFontOfSize:<span class="number">14</span>] forKeyPath:<span class="string">@"_placeholderLabel.font"</span>];</span><br></pre></td></tr></table></figure>
+<p>兼容：</p>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line">- (<span class="built_in">UITextField</span> *)set_searchTextField&#123;</span><br><span class="line">    <span class="keyword">if</span> ([<span class="built_in">UIDevice</span> currentDevice].systemVersion.floatValue &gt;= <span class="number">13.0</span>) &#123;</span><br><span class="line">        <span class="comment">//判断xcode版本</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">self</span>.searchTextField;</span><br><span class="line">    <span class="meta">#else</span></span><br><span class="line">        <span class="keyword">return</span> [<span class="keyword">self</span> valueForKey:<span class="string">@"searchTextField"</span>];</span><br><span class="line">    <span class="meta">#endif</span></span><br><span class="line">    </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> valueForKey:<span class="string">@"searchField"</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Modal-Presentation-Style"><a href="#Modal-Presentation-Style" class="headerlink" title="Modal Presentation Style"></a>Modal Presentation Style</h2><p>在 iOS13 中, Apple 将视图控制器的默认显示样式从 iOS12 的全屏显示改为 Modal 模式显示，这种类似于弹窗模块的卡片需要你手动往下滑将其取消，这个改动可能会影响应用的一些交互。</p>
+<blockquote>
+<p>Defaults to UIModalPresentationAutomatic on iOS starting in iOS 13.0, and UIModalPresentationFullScreen on previous versions.By default UIViewController resolves UIModalPresentationAutomatic to UIModalPresentationPageSheet, but other system-provided view controllers may resolve UIModalPresentationAutomatic to other concrete presentation styles.</p>
+</blockquote>
+<p>针对 navigationController 增加兼容全屏的代码, Swift、OC 代码中分别设置 modalPresentationStyle 为fullScreen， 示例：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">/// swift </span></span><br><span class="line"><span class="meta">@objc</span> <span class="keyword">private</span> <span class="function"><span class="keyword">func</span> <span class="title">dismiss</span><span class="params">()</span></span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> navigationController = <span class="type">UINavigationController</span>(rootViewController: <span class="type">XTNoLoginTagGuideViewController</span>())</span><br><span class="line">    </span><br><span class="line">    navigationController.modalPresentationStyle = .fullScreen </span><br><span class="line">    </span><br><span class="line">    <span class="type">XTGlobalTools</span>.getCurrentVC()?.present(navigationController, animated: <span class="literal">true</span>, completion: &#123; </span><br><span class="line">      <span class="keyword">self</span>.removeFromSuperview() &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><table><tr><td class="code"><pre><span class="line"><span class="comment">// objc</span></span><br><span class="line"><span class="built_in">UINavigationController</span> *navi = [[<span class="built_in">UINavigationController</span> alloc] initWithRootViewController:readXiaoceVC];</span><br><span class="line">[navi setModalPresentationStyle: <span class="built_in">UIModalPresentationFullScreen</span>];</span><br><span class="line">[currentVC presentViewController:navi animated:<span class="literal">YES</span> completion:<span class="literal">nil</span>];</span><br></pre></td></tr></table></figure>
+<h2 id="Dark-mode"><a href="#Dark-mode" class="headerlink" title="Dark mode"></a>Dark mode</h2><p>暗黑模式的适配稍微复杂一些，这里把兼容分为基本、中等、最高三个级别：</p>
+<ul>
+<li><p>最基本</p>
+<p>不适配 dark mode，即用户切换 darkmode 的时和 lightmode 的时候 app 的样式一致，这样能保证用户正常使用。最基本层级的兼容比较容易，尝试直接在项目的 info.split 中更改 User Interface Style 为 Light, 可直接 Xcode 界面设置或更新 info.split 代码</p>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">&lt;key&gt;UIUserInterfaceStyle&lt;/key&gt;</span><br><span class="line">&lt;string&gt;Light&lt;/string&gt;</span><br></pre></td></tr></table></figure>
+<p>但这样强制使用 Light 模式带来的影响就是用户切换成 Dark mode ，如果 Status Bar 的显示未兼容会影响用户查看设备状态栏信息。iOS13 对Status BarAPI 做了修改，之前 Status Bar 有两种状态：</p>
+<ul>
+<li>default 默认文字黑色</li>
+<li>lightContent 文字白色</li>
+</ul>
+<p>之后增加了文字白色，UIStatusBarStyleDefault 自动选择黑色或白色，如图所示：</p>
+<ul>
+<li>default 自动切换</li>
+<li>lightContent 文字白色</li>
+<li>darkContent 文字黑色</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://assets.wuxinhua.com/blog/assets/ios13/status-bar.png" alt></p>
+<ul>
+<li><p>中等</p>
+<p>中等适配主要是颜色相关，例如针对 dark mode 修改背景颜色和字体颜色， 需要UI配合针对目前正常的颜色值给出 dark mode 的颜色值，然后整体来修改替换。</p>
+</li>
+<li><p>最高</p>
+<p>最高级别的适配除了颜色外，App 中所有涉及到需要兼容的 icon 或图片、webView 样式都需要进行适配，例如 icon 、图片需要准备两套。同样这部分也需要产品、UI 来配合。</p>
+</li>
+</ul>
+<p>简单总结一下：</p>
+<ul>
+<li>两种模式的适配主要涉及颜色和图片两个方面的适配</li>
+<li>从 iOS13 开始 UIColor 是一个动态的颜色，可自定义动态 UIColor，针对两种模式给对应的颜色</li>
+<li>图片的适配在不同模式的情况下, 需要对 Assets.xcassets 中的图片选择 Appearances 为 light 和 dark 时准备两套不同的图片</li>
+<li>更新 StatusBar 样式</li>
+<li>更新 UIActivityIndicatorView 样式（已废弃了一些样式，iOS13 之后可以通过 color 属性设置你需要的样式）</li>
+<li>有时我们还需要监听系统模式的变化，针对不同模式作出响应</li>
+</ul>
+<p>具体可以运行 WWDC 现场演示例子<a href="https://docs-assets.developer.apple.com/published/7ad8bd39bb/AdoptingIOSDarkMode.zip" target="_blank" rel="noopener">代码</a>。</p>
+<h2 id="子线程修改界面导致崩溃"><a href="#子线程修改界面导致崩溃" class="headerlink" title="子线程修改界面导致崩溃"></a>子线程修改界面导致崩溃</h2><p>GCD（Grand Central Dispatch） 是苹果公司为多核的并行运算提出的解决方案, 允许程序将任务切分为多个单一任务然后提交至工作队列来并发地或者串行地执行，主要分为 Main queue 、Global queue 和 Custom queue三种，分别对应串行的主线程、并行的全局队列，自定义队列，Custom Queues 默认是串行，当然也可以设置 attributes 为 concurrent，这样它变成了并行 queue。Main queue 运行在系统主线程的一个串行队列,我们所有的UI刷新都发生在 Main queue.如果我们在主线程外的地方做UI操作则会报错，需要将 UI 刷新操作放置 mainQueue 里，如下例子所示：</p>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="type">DispatchQueue</span>.main.async &#123; </span><br><span class="line">  <span class="comment">// view 更新操作</span></span><br><span class="line">  <span class="keyword">self</span>.view.reload()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="UIWebView"><a href="#UIWebView" class="headerlink" title="UIWebView"></a>UIWebView</h2><p>当你需要在应用里展示一些 HTML 页面的时候，就需要用到 webview, iOS中有 UIWebview 和 WKWebview 两种 Webview ，在 WWDC 2018 的演讲介绍中，官方已经宣布正式弃用 UIWebView，并建议之后采用 WKWebview API 构建。</p>
+<blockquote>
+<p>WKWebView has been around since 2014, so it’s not technically new. However, it’s worth mentioning again because we are now officially deprecating UIWebView. So, if you’re starting a new app, or a new project, and would like to display web content that’s not easily put into a native view, use the WKWebView.</p>
+</blockquote>
+<p>区别：</p>
+<ul>
+<li>UIWebView 使用 UIKit 框架，而 WKWebView 使用 WebKit.</li>
+<li>WKWebView 运行在应用单独的一个线程上，并且它可以利用 Safari JavaScript 引擎进行优化，这意味着 WKWebView 加载页面更快更加高效，减少内存开销</li>
+<li>WKWebView 加载本地文件在 iOS 9 中得到修复</li>
+<li>WKWebView 中无法像在 UIWebView 中那样对页面进行缩放适应</li>
+<li>WKWebView 增强了对 indexedDB 的支持</li>
+</ul>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line">  <span class="comment">// UIWebView</span></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UIWebViewController</span>: <span class="title">UIViewController</span></span>&#123;</span><br><span class="line">   <span class="meta">@IBOutlet</span> <span class="keyword">weak</span> <span class="keyword">var</span> webView: <span class="type">UIWebView</span>!</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">            <span class="keyword">let</span> url = <span class="type">URL</span> (string: <span class="string">"https://www.example.com"</span>)</span><br><span class="line">            <span class="keyword">let</span> requestObj = <span class="type">URLRequest</span>(url: url!)</span><br><span class="line">        webView.backgroundColor = <span class="type">UIColor</span>.blue</span><br><span class="line">            webView.loadRequest(requestObj)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// WKWebView</span></span><br><span class="line"><span class="keyword">import</span> UIKit</span><br><span class="line"><span class="keyword">import</span> WebKit</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WKWebViewController</span>: <span class="title">UIViewController</span>, <span class="title">WKNavigationDelegate</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> webView : <span class="type">WKWebView</span>!</span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">func</span> <span class="title">viewDidLoad</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.viewDidLoad()</span><br><span class="line">        <span class="keyword">let</span> myUrl = <span class="string">"https://www.example.com"</span></span><br><span class="line">        <span class="keyword">let</span> url = <span class="type">NSURL</span>(string: myUrl)</span><br><span class="line">        <span class="keyword">let</span> request = <span class="type">NSURLRequest</span>(url: url! <span class="keyword">as</span> <span class="type">URL</span>)</span><br><span class="line">        webView = <span class="type">WKWebView</span>(frame: <span class="keyword">self</span>.view.frame)</span><br><span class="line">        webView.navigationDelegate = <span class="keyword">self</span></span><br><span class="line">        webView.load(request <span class="keyword">as</span> <span class="type">URLRequest</span>)</span><br><span class="line">        <span class="keyword">self</span>.view.addSubview(webView)</span><br><span class="line">        <span class="keyword">self</span>.view.sendSubview(toBack: webView)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Sign-In-With-Apple"><a href="#Sign-In-With-Apple" class="headerlink" title="Sign In With Apple"></a>Sign In With Apple</h2><p>使用苹果登陆是苹果推出的新功能，方便用户使用他们的苹果ID登录到你的应用程序或网站。无需填写登陆注册表单、验证电子邮件地址、选择新的密码等，可以使用“Sign In With Apple”建立一个帐户并快速开始使用该应用。苹果的在 WWDC2019 介绍PPT中提到：</p>
+<ul>
+<li>精简的账户注册（Name + Email addresses）</li>
+<li>使用已验证邮箱地址（依赖 AppleID 做双重验证）</li>
+<li>反作弊</li>
+<li>安全地（APP只能访问名称和邮件，苹果不记录信息、可以隐藏邮箱地址）</li>
+<li>跨平台（iOS macOS watchOS tvOS JavaScript）</li>
+</ul>
+<p>Apple 介绍的一些使用场景：</p>
+<ul>
+<li>用户在你的应用帐户系统功能有限的情况下创建一个帐户进行体验</li>
+<li>用户在体验产品应用的功能后创建一个账户，例如保存进度、设置个人资料信息等</li>
+<li>用户以访客身份完成购买后创建用户</li>
+</ul>
+<p><strong>移动端：</strong></p>
+<p>接入分为以下四步，提供 “Sign In With Apple” 按钮 =&gt; 授权 =&gt; 认证 =&gt; 处理回调:</p>
+<ol>
+<li>在应用的登陆页面添加 “Sign In With Apple” 登陆按钮:</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Add “Sign In with Apple” button to your login view</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">setupProviderLoginView</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">let</span> authorizationButton = <span class="type">ASAuthorizationAppleIDButton</span>()</span><br><span class="line">        authorizationButton.addTarget(<span class="keyword">self</span>, action: #selector(handleAuthorizationAppleIDButtonPress), <span class="keyword">for</span>: .touchUpInside)</span><br><span class="line">        <span class="keyword">self</span>.loginProviderStackView.addArrangedSubview(authorizationButton)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>绑定按钮点击事件，给苹果发送授权请求:</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="comment">// Configure request, setup delegates and perform authorization request    </span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleAuthorizationAppleIDButtonPress</span><span class="params">()</span></span> &#123;</span><br><span class="line">        <span class="keyword">let</span> appleIDProvider = <span class="type">ASAuthorizationAppleIDProvider</span>()</span><br><span class="line">        <span class="keyword">let</span> request = appleIDProvider.createRequest()</span><br><span class="line">        request.requestedScopes = [.fullName, .email]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">let</span> authorizationController = <span class="type">ASAuthorizationController</span>(authorizationRequests: [request])</span><br><span class="line">        authorizationController.delegate = <span class="keyword">self</span></span><br><span class="line">        authorizationController.presentationContextProvider = <span class="keyword">self</span></span><br><span class="line">        authorizationController.performRequests()</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>针对苹果授权请求响应进行处理，成功即可在系统创建对应账号、保存账号到 keychain 等操作。</li>
+</ol>
+<figure class="highlight swift"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">extension</span> <span class="title">LoginViewController</span>: <span class="title">ASAuthorizationControllerDelegate</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 授权成功处理，拿到授权反馈后可以直接创建账号了</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">authorizationController</span><span class="params">(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">let</span> appleIDCredential = authorization.credential <span class="keyword">as</span>? <span class="type">ASAuthorizationAppleIDCredential</span> &#123;</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">let</span> userIdentifier = appleIDCredential.user</span><br><span class="line">            <span class="keyword">let</span> fullName = appleIDCredential.fullName</span><br><span class="line">            <span class="keyword">let</span> email = appleIDCredential.email</span><br><span class="line">            <span class="comment">// Create an account in your system.</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 授权失败处理</span></span><br><span class="line">    <span class="function"><span class="keyword">func</span> <span class="title">authorizationController</span><span class="params">(<span class="number">_</span>: ASAuthorizationController, </span></span></span><br><span class="line"><span class="function"><span class="params">                didCompleteWithError error: Error)</span></span> &#123;</span><br><span class="line">        <span class="comment">// Handle error</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>网页端</strong>：</p>
+<p>苹果针对网页版应用提供了对应的JS SDK, 也能接入 “Sign In With Apple”，配置过程类似，示例如下：</p>
+<ol>
+<li>HTML 头部页面接入 Apple 的 JS:</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>可以使用 meta 标签或在 JavaScript 代码中配置授权 API 字段，并提供 Apple 登录按钮，如下例子所示:</li>
+</ol>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"appleid-signin-client-id"</span> <span class="attr">content</span>=<span class="string">"[CLIENT_ID]"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"appleid-signin-scope"</span> <span class="attr">content</span>=<span class="string">"[SCOPES]"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"appleid-signin-redirect-uri"</span> <span class="attr">content</span>=<span class="string">"[REDIRECT_URI]"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"appleid-signin-state"</span> <span class="attr">content</span>=<span class="string">"[STATE]"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 也可以在JavaScript代码中配置 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="undefined">         AppleID.auth.init(&#123;</span></span><br><span class="line"><span class="javascript">             clientId : <span class="string">'[CLIENT_ID]'</span>,</span></span><br><span class="line"><span class="javascript">             scope : <span class="string">'[SCOPES]'</span>,</span></span><br><span class="line"><span class="javascript">             redirectURI: <span class="string">'[REDIRECT_URI]'</span>,</span></span><br><span class="line"><span class="javascript">             state : <span class="string">'[STATE]'</span></span></span><br><span class="line"><span class="undefined">         &#125;);</span></span><br><span class="line"><span class="undefined">     </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li>处理认证信息回调，Apple 处理授权请求后会将一个包含授权结果的HTTP POST请求发送到redirectURI 中提供的 URL 中。具体配置可以查看官方文档，参考使用官方提供的 demo。</li>
+</ol>
+<h2 id="LaunchImage-弃用"><a href="#LaunchImage-弃用" class="headerlink" title="LaunchImage 弃用"></a>LaunchImage 弃用</h2><p>启动页的图片设置方式有两种：</p>
+<ul>
+<li>通过 LaunchScreen.storyboard 设置</li>
+<li>通过 Assets.xcassets 增加 iOS Launch Image 设置启动页图片，苹果设备的尺寸增多，意味着我们需要在对应的 assets 里放入对应尺寸的启动图。</li>
+</ul>
+<blockquote>
+<p>‘UILaunchImages’ has been deprecated, use launch storyboards instead.</p>
+</blockquote>
+<p>当 Xcode 升级到11后，如果继续使用则会提示上面提示，建议在 storyboards 设置。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这次适配过程中的一些个人体会：</p>
+<ol>
+<li><p>苹果已经更新了 iOS13 的适配时间节点，从 2020 年 4 月份起，所有提交到 App Store 的应用都需要使用 iOS 13 SDK 或更高的版本来构建，并且还需要兼容 iPhone XS Max 、iPad Pro 等设备，如果提供了第三方登陆功能的应用还得兼容使用  “Sign In With Apple”  登陆，兼容暗黑模式，提供一个暗黑模式下的应用截图，所以建议尽早完成应用 iOS13 的适配。</p>
+</li>
+<li><p>由于目前并没有完成所有的适配工作，截止到目前开发过程遇到的一些报错基本都是 API 层改动造成的，阅读文档提示加上网上查找答案修改代码即可，只是稍微有一点点 swift 基础，但对 iOS 开发的认识其实远远不够，之后还需要多看多练习代码。</p>
+</li>
+<li><p>iOS 开发测试发版周期都较长，不像 web 端能快速更新部署上线，例如前期准准备 iOS 开发机器、熟悉Xcode 开发工具、iOS 测试设备、开发者账号、配置证书等需要做比较多的准备工作，后期的  App Store 发版还有可能被拒，所以对代码质量、发版前的测试质量要求都比较高。</p>
+</li>
+</ol>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><ul>
+<li><a href="https://developer.apple.com/documentation" target="_blank" rel="noopener">苹果开发文档</a></li>
+<li><a href="https://developer.apple.com/videos/play/wwdc2019" target="_blank" rel="noopener">WWDC 2019</a></li>
+<li><a href="https://developer.apple.com/documentation/xcode_release_notes/xcode_11_beta_release_notes" target="_blank" rel="noopener">Xcode 11 Release Notes</a></li>
+<li><a href="https://developer.apple.com/design/human-interface-guidelines/ios/visual-design/dark-mode/" target="_blank" rel="noopener">Dark Mode 介绍</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      wuxinhua
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://wuxinhua.com/2019/11/02/Whats-new-in-iOS-13-and-adapting-app-to-new-version/" title="适配 iOS 13">https://wuxinhua.com/2019/11/02/Whats-new-in-iOS-13-and-adapting-app-to-new-version/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。任何人可以进行转载、分享，但不可在未经允许的情况下用于商业用途！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS-13-适配/" rel="tag"># iOS 13 适配</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/31/The-common-issues-and-errors-I-have-faced-as-a-react-native-beginner/" rel="next" title="React Native 新手常见问题及体验总结">
+                <i class="fa fa-chevron-left"></i> React Native 新手常见问题及体验总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/11/30/Migrating-from-travis-to-GitHub-Actions/" rel="prev" title="译文：从 Travis 迁移至 GitHub Actions">
+                译文：从 Travis 迁移至 GitHub Actions <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="wuxinhua">
+          <p class="site-author-name" itemprop="name">wuxinhua</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">34</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">标签</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#功能更新"><span class="nav-number">2.</span> <span class="nav-text">功能更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API-层变动"><span class="nav-number">3.</span> <span class="nav-text">API 层变动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#KVC"><span class="nav-number">3.1.</span> <span class="nav-text">KVC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Modal-Presentation-Style"><span class="nav-number">4.</span> <span class="nav-text">Modal Presentation Style</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dark-mode"><span class="nav-number">5.</span> <span class="nav-text">Dark mode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子线程修改界面导致崩溃"><span class="nav-number">6.</span> <span class="nav-text">子线程修改界面导致崩溃</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIWebView"><span class="nav-number">7.</span> <span class="nav-text">UIWebView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Sign-In-With-Apple"><span class="nav-number">8.</span> <span class="nav-text">Sign In With Apple</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LaunchImage-弃用"><span class="nav-number">9.</span> <span class="nav-text">LaunchImage 弃用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">10.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">11.</span> <span class="nav-text">附录</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="author" itemprop="copyrightHolder">Created with </span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i> 
+  </span> by <a class="theme-link" href="https://github.com/M1seRy">
+     wuxinhua
+   </a>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+ <div class="theme-info">
+  Host by
+    <a class="theme-link" href="https://www.aliyun.com/">
+    Aliyun 
+   </a>
+ </div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  <div class="galleria"></div>
+<script type="text/javascript">
+    console.log('人生如逆旅，我亦是行人。')
+</script>
+  
+</body>
+</html>
